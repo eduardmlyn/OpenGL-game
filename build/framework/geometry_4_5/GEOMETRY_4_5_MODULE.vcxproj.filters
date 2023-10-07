@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\School\pv112\OpenGL_Game\framework\geometry_4_5\src\cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\School\pv112\OpenGL_Game\framework\geometry_4_5\src\geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\School\pv112\OpenGL_Game\framework\geometry_4_5\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{24A887E1-7E7C-39E1-84DC-27F05474AABE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

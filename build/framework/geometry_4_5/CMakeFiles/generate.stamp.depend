@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/School/pv112/OpenGL_Game/framework/core/depends.cmake
+C:/School/pv112/OpenGL_Game/framework/geometry/depends.cmake
+C:/School/pv112/OpenGL_Game/framework/geometry_4_5/CMakeLists.txt
+C:/School/pv112/OpenGL_Game/framework/geometry_4_5/depends.cmake

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\School\pv112\OpenGL_Game\framework\gui\src\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\School\pv112\OpenGL_Game\framework\gui\src\gui_application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\School\pv112\OpenGL_Game\framework\gui\src\gui_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\School\pv112\OpenGL_Game\framework\gui\include\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\School\pv112\OpenGL_Game\framework\gui\include\gui_application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\School\pv112\OpenGL_Game\framework\gui\include\gui_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\School\pv112\OpenGL_Game\framework\gui\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{568DE964-2269-38BA-A2C3-0365BA1C76F3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{24A887E1-7E7C-39E1-84DC-27F05474AABE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

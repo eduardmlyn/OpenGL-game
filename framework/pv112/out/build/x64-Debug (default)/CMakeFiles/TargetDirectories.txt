@@ -1,0 +1,3 @@
+C:/DATA/University/Teaching/Computer Graphics/Common Framework/framework/pv112/out/build/x64-Debug (default)/CMakeFiles/FRAMEWORK_PV112.dir
+C:/DATA/University/Teaching/Computer Graphics/Common Framework/framework/pv112/out/build/x64-Debug (default)/CMakeFiles/edit_cache.dir
+C:/DATA/University/Teaching/Computer Graphics/Common Framework/framework/pv112/out/build/x64-Debug (default)/CMakeFiles/rebuild_cache.dir
