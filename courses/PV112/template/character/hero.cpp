@@ -1,8 +1,17 @@
-#include <vector>
-#include <string>
 #include "models.hpp"
 
-Character::Character(/* args */)
+Character::Character(std::string name,
+    ClassE charClass,
+    StatPairS health,
+    StatPairS mana,
+    StatPairS attackDamage,
+    StatPairS abilityDamage,
+    StatPairS armor,
+    StatPairS criticalChance,
+    float criticalDamage,
+    StatPairS speed,
+    StatPairS accuracy,
+    ModificationS modifications)
 {
 }
 
@@ -22,7 +31,7 @@ bool Character::isTaunting()
 
 float Character::getMaxHP()
 {
-    return this->health.maxValue;
+    return this->health.baseValue;
 }
 
 float Character::getCurrentHP()
@@ -32,7 +41,7 @@ float Character::getCurrentHP()
 
 float Character::geMaxMana()
 {
-    return this->mana.maxValue;
+    return this->mana.baseValue;
 }
 
 float Character::getCurrentMana()
@@ -42,7 +51,7 @@ float Character::getCurrentMana()
 
 float Character::getMaxAD()
 {
-    return this->attackDamage.maxValue;
+    return this->attackDamage.baseValue;
 }
 
 float Character::getCurrentAD()
@@ -52,7 +61,7 @@ float Character::getCurrentAD()
 
 float Character::getMaxAP()
 {
-    return this->abilityDamage.maxValue;
+    return this->abilityDamage.baseValue;
 }
 
 float Character::getCurrentAP()
@@ -62,7 +71,7 @@ float Character::getCurrentAP()
 
 float Character::getMaxArmor()
 {
-    return this->armor.maxValue;
+    return this->armor.baseValue;
 }
 
 float Character::getCurrentArmor()
@@ -72,7 +81,7 @@ float Character::getCurrentArmor()
 
 float Character::getMaxCriticalChance()
 {
-    return this->criticalChance.maxValue;
+    return this->criticalChance.baseValue;
 }
 
 float Character::getCurrentCriticalChance()
@@ -87,7 +96,7 @@ float Character::getCriticalDamage()
 
 float Character::getMaxSpeed()
 {
-    return this->speed.maxValue;
+    return this->speed.baseValue;
 }
 
 float Character::getCurrentSpeed()
@@ -97,10 +106,14 @@ float Character::getCurrentSpeed()
 
 float Character::getMaxAccuracy()
 {
-    return this->accuracy.maxValue;
+    return this->accuracy.baseValue;
 }
 
 float Character::getCurrentAccuracy()
 {
     return this->accuracy.currentValue;
+}
+
+void Character::setAbilities(std::vector<AbilityS> abilities) {
+    this->abilities = abilities;
 }

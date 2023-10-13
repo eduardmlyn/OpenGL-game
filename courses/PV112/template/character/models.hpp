@@ -23,7 +23,21 @@ private:
     std::vector<AbilityS> abilities;
 
 public:
-    Character(/* args */);
+    Character();
+    Character(
+        std::string name,
+        ClassE charClass,
+        StatPairS health,
+        StatPairS mana,
+        StatPairS attackDamage,
+        StatPairS abilityDamage,
+        StatPairS armor,
+        StatPairS criticalChance,
+        float criticalDamage,
+        StatPairS speed,
+        StatPairS accuracy,
+        ModificationS modifications
+    );
     ~Character();
 
     // TODO check if all functions are needed regularly
@@ -74,7 +88,7 @@ struct ModificationTripleS
 struct StatPairS
 {
     float currentValue;
-    float maxValue;
+    float baseValue;
 };
 
 struct ModificationS
