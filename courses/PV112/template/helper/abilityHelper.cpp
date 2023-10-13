@@ -1,25 +1,4 @@
-#include <vector>
-#include <string>
-#include "../character/models.hpp"
-
-class abilityHelper
-{
-private:
-    std::vector<AbilityS> mageAbilites;
-    std::vector<AbilityS> marksmanAbilites;
-    std::vector<AbilityS> tankAbilites;
-    std::vector<AbilityS> healerAbilites;
-    std::vector<AbilityS> assassinAbilites;
-    void setMageAbilities();
-    void setMarksmanAbilities();
-    void setTankAbilities();
-    void setHealerAbilities();
-    void setAssassinAbilities();
-
-public:
-    abilityHelper(std::vector<Character> characters);
-    ~abilityHelper();
-};
+#include "./abilityHelper.hpp"
 
 void abilityHelper::setMageAbilities()
 {
@@ -35,7 +14,7 @@ void abilityHelper::setMageAbilities()
         "Deals damage to target enemy and gains 8 mana.",
         nullptr // TODO REWORK
     };
-    this->mageAbilites.push_back(basicAttack);
+    this->mageAbilities.push_back(basicAttack);
 
     // First special ability
     AbilityS firstSpecial = {
@@ -48,7 +27,7 @@ void abilityHelper::setMageAbilities()
         4,
         "Deals damage to target enemy and shreds defense.",
         nullptr};
-    this->mageAbilites.push_back(firstSpecial);
+    this->mageAbilities.push_back(firstSpecial);
 
     // Second special ability
     AbilityS secondSpecial = {
@@ -61,7 +40,7 @@ void abilityHelper::setMageAbilities()
         6,
         "Deals damage to ALL enemies and dispells buffs on target enemy.",
         nullptr};
-    this->mageAbilites.push_back(secondSpecial);
+    this->mageAbilities.push_back(secondSpecial);
 }
 
 void abilityHelper::setMarksmanAbilities()
@@ -78,7 +57,7 @@ void abilityHelper::setMarksmanAbilities()
         "Deals damage to target enemy and gains 5 mana.",
         nullptr // TODO REWORK
     };
-    this->marksmanAbilites.push_back(basicAttack);
+    this->marksmanAbilities.push_back(basicAttack);
 
     // First special ability
     AbilityS firstSpecial = {
@@ -91,7 +70,7 @@ void abilityHelper::setMarksmanAbilities()
         3,
         "Deals damage to target enemy three times.",
         nullptr};
-    this->marksmanAbilites.push_back(firstSpecial);
+    this->marksmanAbilities.push_back(firstSpecial);
 
     // Second special ability
     AbilityS secondSpecial = {
@@ -104,7 +83,7 @@ void abilityHelper::setMarksmanAbilities()
         2,
         "Gain speed up, attack damage and accuracy up.",
         nullptr};
-    this->marksmanAbilites.push_back(secondSpecial);
+    this->marksmanAbilities.push_back(secondSpecial);
 }
 
 void abilityHelper::setTankAbilities()
@@ -121,7 +100,7 @@ void abilityHelper::setTankAbilities()
         "Deals damage to target enemy, gains 5 mana and defense up(for 2 turns).",
         nullptr // TODO REWORK
     };
-    this->tankAbilites.push_back(basicAttack);
+    this->tankAbilities.push_back(basicAttack);
 
     // First special ability
     AbilityS firstSpecial = {
@@ -136,7 +115,7 @@ void abilityHelper::setTankAbilities()
         "and accuracy up(for 2 turns)."
         "Also gains defense up(for 3 turns).",
         nullptr};
-    this->tankAbilites.push_back(firstSpecial);
+    this->tankAbilities.push_back(firstSpecial);
 
     // Second special ability
     AbilityS secondSpecial = {
@@ -150,7 +129,7 @@ void abilityHelper::setTankAbilities()
         "Gain taunt and defense up for 2 turns."
         "Deal damage to target enemy and inflict enemy with defense down and accuracy down.",
         nullptr};
-    this->tankAbilites.push_back(secondSpecial);
+    this->tankAbilities.push_back(secondSpecial);
 }
 
 void abilityHelper::setHealerAbilities()
@@ -168,7 +147,7 @@ void abilityHelper::setHealerAbilities()
         "Deals damage to target enemy and gains 5 mana.",
         nullptr // TODO REWORK
     };
-    this->healerAbilites.push_back(basicAttack);
+    this->healerAbilities.push_back(basicAttack);
 
     // First special ability
     AbilityS firstSpecial = {
@@ -181,7 +160,7 @@ void abilityHelper::setHealerAbilities()
         4,
         "Heals and dispells all debuffs from all allies.",
         nullptr};
-    this->healerAbilites.push_back(firstSpecial);
+    this->healerAbilities.push_back(firstSpecial);
 
     // Second special ability
     AbilityS secondSpecial = {
@@ -194,7 +173,7 @@ void abilityHelper::setHealerAbilities()
         3,
         "Heals target ally and grants speed up, defens up and accuracy up to the ally.",
         nullptr};
-    this->healerAbilites.push_back(secondSpecial);
+    this->healerAbilities.push_back(secondSpecial);
 }
 
 void abilityHelper::setAssassinAbilities()
@@ -212,7 +191,7 @@ void abilityHelper::setAssassinAbilities()
         "This attack deals more damage when the target is below 50\% health.",
         nullptr // TODO REWORK
     };
-    this->assassinAbilites.push_back(basicAttack);
+    this->assassinAbilities.push_back(basicAttack);
 
     // First special ability
     AbilityS firstSpecial = {
@@ -225,7 +204,7 @@ void abilityHelper::setAssassinAbilities()
         5,
         "Deal damage to target enemy, instantly killing the target if it was below 25\% health.",
         nullptr};
-    this->assassinAbilites.push_back(firstSpecial);
+    this->assassinAbilities.push_back(firstSpecial);
 
     // Second special ability
     AbilityS secondSpecial = {
@@ -239,11 +218,14 @@ void abilityHelper::setAssassinAbilities()
         "Gain speed up, accuracy up, critical chance up and stealth(cannot be targeted) for 1 turn."
         "Inflict accuracy down, defense down, damage down to target enemy.",
         nullptr};
-    this->assassinAbilites.push_back(secondSpecial);
+    this->assassinAbilities.push_back(secondSpecial);
 }
 
+abilityHelper::abilityHelper()
+{
+}
 // TODO add "init" data to process all abilities
-abilityHelper::abilityHelper(std::vector<Character> characters)
+abilityHelper::abilityHelper()
 {
     // setting up the characters abilities
     setMageAbilities();
@@ -251,33 +233,35 @@ abilityHelper::abilityHelper(std::vector<Character> characters)
     setHealerAbilities();
     setAssassinAbilities();
     setMarksmanAbilities();
+}
 
+abilityHelper::~abilityHelper()
+{
+}
+
+void abilityHelper::addAbilitiesToCharacters(std::vector<Character*> characters) {
     // binding abilities to characters
-    for (Character &character : characters)
+    for (Character* &character : characters)
     {
-        switch (character.getClass())
+        switch (character->getClass())
         {
         case MAGE:
-            character.setAbilities(mageAbilites);
+            character->setAbilities(mageAbilities);
             break;
         case TANK:
-            character.setAbilities(tankAbilites);
+            character->setAbilities(tankAbilities);
             break;
         case HEALER:
-            character.setAbilities(healerAbilites);
+            character->setAbilities(healerAbilities);
             break;
         case ASSASSIN:
-            character.setAbilities(assassinAbilites);
+            character->setAbilities(assassinAbilities);
             break;
         case MARKSMAN:
-            character.setAbilities(marksmanAbilites);
+            character->setAbilities(marksmanAbilities);
             break;
         default:
             break;
         }
     }
-}
-
-abilityHelper::~abilityHelper()
-{
 }
