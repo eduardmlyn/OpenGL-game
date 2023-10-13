@@ -1,9 +1,0 @@
-# CMake generation dependency list for this directory.
-C:/School/pv112/OpenGL_Game/build/vcpkg_installed/x64-windows/share/tinyobjloader/tinyobjloader-config-version.cmake
-C:/School/pv112/OpenGL_Game/build/vcpkg_installed/x64-windows/share/tinyobjloader/tinyobjloader-config.cmake
-C:/School/pv112/OpenGL_Game/build/vcpkg_installed/x64-windows/share/tinyobjloader/tinyobjloader-targets-debug.cmake
-C:/School/pv112/OpenGL_Game/build/vcpkg_installed/x64-windows/share/tinyobjloader/tinyobjloader-targets-release.cmake
-C:/School/pv112/OpenGL_Game/build/vcpkg_installed/x64-windows/share/tinyobjloader/tinyobjloader-targets.cmake
-C:/School/pv112/OpenGL_Game/framework/core/depends.cmake
-C:/School/pv112/OpenGL_Game/framework/geometry/CMakeLists.txt
-C:/School/pv112/OpenGL_Game/framework/geometry/depends.cmake
