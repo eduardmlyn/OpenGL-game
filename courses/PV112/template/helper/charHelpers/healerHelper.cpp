@@ -16,7 +16,6 @@ private:
     float criticalDamage = 1.25f;
     StatPairS speed = { 120.0f, 120.0f };
     StatPairS accuracy = { 0.75f, 0.75f };
-    ModificationS modifications = {};
 
     Character* createNewHealerCharacter();
 
@@ -47,8 +46,7 @@ Character* healerHelper::createNewHealerCharacter() {
         criticalChance,
         criticalDamage,
         speed,
-        accuracy,
-        modifications
+        accuracy
     );
 }
 

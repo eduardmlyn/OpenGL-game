@@ -16,7 +16,6 @@ private:
     float criticalDamage = 1.65f;
     StatPairS speed = { 80.0f, 80.0f };
     StatPairS accuracy = { 0.95f, 0.95f };
-    ModificationS modifications = {};
 
     Character* createNewMageCharacter();
 
@@ -47,8 +46,7 @@ Character* mageHelper::createNewMageCharacter() {
         criticalChance,
         criticalDamage,
         speed,
-        accuracy,
-        modifications
+        accuracy
     );
 }
 

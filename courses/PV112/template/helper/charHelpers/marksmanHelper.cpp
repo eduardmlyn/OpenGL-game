@@ -1,5 +1,3 @@
-#include <vector>
-#include <string>
 #include "../abilityHelper.hpp"
 
 class marksmanHelper
@@ -16,7 +14,6 @@ private:
     float criticalDamage = 1.75f;
     StatPairS speed = { 100.0f, 100.0f };
     StatPairS accuracy = { 0.8f, 0.8f };
-    ModificationS modifications = {};
 
     Character* createNewMarksmanCharacter();
 
@@ -47,8 +44,7 @@ Character* marksmanHelper::createNewMarksmanCharacter() {
         criticalChance,
         criticalDamage,
         speed,
-        accuracy,
-        modifications
+        accuracy
     );
 }
 

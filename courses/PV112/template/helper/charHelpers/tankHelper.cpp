@@ -1,5 +1,3 @@
-#include <vector>
-#include <string>
 #include "../abilityHelper.hpp"
 
 class tankHelper
@@ -16,7 +14,6 @@ private:
     float criticalDamage = 1.55f;
     StatPairS speed = { 60.0f, 60.0f };
     StatPairS accuracy = { 0.7f, 0.7f };
-    ModificationS modifications = {};
 
     Character* createNewTankCharacter();
 
@@ -47,8 +44,7 @@ Character* tankHelper::createNewTankCharacter() {
         criticalChance,
         criticalDamage,
         speed,
-        accuracy,
-        modifications
+        accuracy
     );
 }
 

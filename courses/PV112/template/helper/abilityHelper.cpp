@@ -1,3 +1,4 @@
+#include <iostream>
 #include "./abilityHelper.hpp"
 
 void abilityHelper::setMageAbilities()
@@ -9,7 +10,7 @@ void abilityHelper::setMageAbilities()
         1.0f,
         0.0f,
         false,
-        false,
+        0,
         0,
         "Deals damage to target enemy and gains 8 mana.",
         nullptr // TODO REWORK
@@ -23,8 +24,8 @@ void abilityHelper::setMageAbilities()
         0.0f,
         1.0f,
         false,
-        false,
         4,
+        0,
         "Deals damage to target enemy and shreds defense.",
         nullptr};
     this->mageAbilities.push_back(firstSpecial);
@@ -36,8 +37,8 @@ void abilityHelper::setMageAbilities()
         0.0f,
         0.75f,
         true,
-        false,
         6,
+        0,
         "Deals damage to ALL enemies and dispells buffs on target enemy.",
         nullptr};
     this->mageAbilities.push_back(secondSpecial);
@@ -52,7 +53,7 @@ void abilityHelper::setMarksmanAbilities()
         0.8f,
         0.0f,
         false,
-        false,
+        0,
         0,
         "Deals damage to target enemy and gains 5 mana.",
         nullptr // TODO REWORK
@@ -66,8 +67,8 @@ void abilityHelper::setMarksmanAbilities()
         0.4f,
         0.0f,
         false,
-        false,
         3,
+        0,
         "Deals damage to target enemy three times.",
         nullptr};
     this->marksmanAbilities.push_back(firstSpecial);
@@ -79,8 +80,8 @@ void abilityHelper::setMarksmanAbilities()
         0.0f,
         0.0f,
         false,
-        false,
         2,
+        0,
         "Gain speed up, attack damage and accuracy up.",
         nullptr};
     this->marksmanAbilities.push_back(secondSpecial);
@@ -95,7 +96,7 @@ void abilityHelper::setTankAbilities()
         0.6f,
         0.0f,
         false,
-        false,
+        0,
         0,
         "Deals damage to target enemy, gains 5 mana and defense up(for 2 turns).",
         nullptr // TODO REWORK
@@ -109,8 +110,8 @@ void abilityHelper::setTankAbilities()
         0.4f,
         0.0f,
         true,
-        false,
         4,
+        0,
         "Heals you for a small portion, gives all allies attack and ability damage up"
         "and accuracy up(for 2 turns)."
         "Also gains defense up(for 3 turns).",
@@ -124,10 +125,10 @@ void abilityHelper::setTankAbilities()
         0.2f,
         0.0f,
         false,
-        false,
         4,
+        0,
         "Gain taunt and defense up for 2 turns."
-        "Deal damage to target enemy and inflict enemy with defense down and accuracy down.",
+        "Deal damage to target enemy and inflict enemy with defense down and accuracy down for 1 turn.",
         nullptr};
     this->tankAbilities.push_back(secondSpecial);
 }
@@ -142,7 +143,7 @@ void abilityHelper::setHealerAbilities()
         1.0f,
         0.3f,
         false,
-        false,
+        0,
         0,
         "Deals damage to target enemy and gains 5 mana.",
         nullptr // TODO REWORK
@@ -156,8 +157,8 @@ void abilityHelper::setHealerAbilities()
         0.0f,
         0.85f,
         true,
-        false,
         4,
+        0,
         "Heals and dispells all debuffs from all allies.",
         nullptr};
     this->healerAbilities.push_back(firstSpecial);
@@ -169,9 +170,9 @@ void abilityHelper::setHealerAbilities()
         0.0f,
         0.5f,
         false,
-        false,
         3,
-        "Heals target ally and grants speed up, defens up and accuracy up to the ally.",
+        0,
+        "Heals target ally and grants speed up, defense up and accuracy up to the ally for 2 turns.",
         nullptr};
     this->healerAbilities.push_back(secondSpecial);
 }
@@ -185,7 +186,7 @@ void abilityHelper::setAssassinAbilities()
         0.2f,
         0.0f,
         false,
-        false,
+        0,
         0,
         "Deals damage to target enemy, gains 5 mana."
         "This attack deals more damage when the target is below 50\% health.",
@@ -200,7 +201,7 @@ void abilityHelper::setAssassinAbilities()
         0.5f,
         0.5f,
         false,
-        true,
+        5,
         5,
         "Deal damage to target enemy, instantly killing the target if it was below 25\% health.",
         nullptr};
@@ -213,8 +214,8 @@ void abilityHelper::setAssassinAbilities()
         0.0f,
         0.0f,
         false,
-        false,
         3,
+        0,
         "Gain speed up, accuracy up, critical chance up and stealth(cannot be targeted) for 1 turn."
         "Inflict accuracy down, defense down, damage down to target enemy.",
         nullptr};
@@ -239,9 +240,10 @@ abilityHelper::~abilityHelper()
 {
 }
 
-void abilityHelper::addAbilitiesToCharacters(std::vector<Character*> characters) {
+void abilityHelper::addAbilitiesToCharacters(std::vector<Character *> characters)
+{
     // binding abilities to characters
-    for (Character* &character : characters)
+    for (Character *&character : characters)
     {
         switch (character->getClass())
         {
@@ -264,4 +266,31 @@ void abilityHelper::addAbilitiesToCharacters(std::vector<Character*> characters)
             break;
         }
     }
+}
+
+bool getChanceBoolean(float charChance)
+{
+    // Set random "random" seed  each time fnc is called
+    srand((unsigned)time(NULL));
+    // Get a random number and convert it to float
+    float chance = rand() % 100 / 100;
+
+    return charChance >= chance;
+}
+
+bool abilityHelper::mageBasicAbility(Character mage, Character enemy, AbilityS abilityData)
+{
+    mage.gainMana(8.0f);
+    float damageDealt = mage.getCurrentAD() * abilityData.adRatio;
+    if (getChanceBoolean(mage.getCurrentCriticalChance()))
+    {
+        damageDealt *= mage.getCriticalDamage();
+    }
+    if (!getChanceBoolean(mage.getCurrentAccuracy()))
+    {
+        return false;
+    }
+    damageDealt -= enemy.getCurrentArmor();
+    enemy.receiveDamage(damageDealt);
+    return true;
 }

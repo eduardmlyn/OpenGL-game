@@ -19,8 +19,15 @@ private:
     float criticalDamage;
     StatPairS speed;
     StatPairS accuracy;
-    ModificationS modifications;
+    ModificationS modifications = {}; // TODO change this to all variables set to zero?(do in constructor)
     std::vector<AbilityS> abilities;
+
+    void updateAttackDamage();
+    void updateAbilityDamage();
+    void updateArmor();
+    void updateCriticalChance();
+    void updateSpeed();
+    void updateAccuracy();
 
 public:
     Character();
@@ -35,9 +42,7 @@ public:
         StatPairS criticalChance,
         float criticalDamage,
         StatPairS speed,
-        StatPairS accuracy,
-        ModificationS modifications
-    );
+        StatPairS accuracy);
     ~Character();
 
     // TODO check if all functions are needed regularly
@@ -60,7 +65,11 @@ public:
     float getCurrentSpeed();
     float getMaxAccuracy();
     float getCurrentAccuracy();
+    void receiveDamage(float damage);
+    void setModifications(ModificationS modifications);
+    void updateModificationsAfterTurn();
     void setAbilities(std::vector<AbilityS> abilities);
+    void gainMana(float mana);
 };
 
 // --------------------------
@@ -93,13 +102,10 @@ struct StatPairS
 
 struct ModificationS
 {
-    ModificationTripleS health;
-    ModificationTripleS mana;
     ModificationTripleS attackDamage;
     ModificationTripleS abilityDamage;
     ModificationTripleS armor;
     ModificationTripleS criticalChance;
-    ModificationTripleS criticalDamage; // is this one needed?
     ModificationTripleS speed;
     ModificationTripleS accuracy;
     int taunt;
@@ -112,29 +118,8 @@ struct AbilityS
     float adRatio;
     float apRatio;
     bool isAOE;
-    bool startOnCooldown;
-    int cooldown;
+    int baseCooldown;
+    int currentCooldown;
     std::string description;
-    void (*trigger)(Character character, std::vector<Character> enemies, const AbilityS &ability);
+    bool (*trigger)(Character character, std::vector<Character> enemies, const AbilityS &ability);
 };
-
-// struct CharacterS {
-//     std::string name;
-//     ClassE clazz;
-//     float health;
-//     float mana;
-//     float attackDamage;
-//     float abilityDamage;
-//     float armor;
-//     float criticalChance;
-//     float criticalDamage;
-//     float speed;
-//     float accuracy;
-//     bool isTaunting;
-//     ModificationS modifications;
-//     std::vector<AbilityS> abilities;
-//     void useAbility(const AbilityS& ability) {
-//         // TODO add some other functionality?
-//         ability.trigger(*this, ability);
-//     }
-// };

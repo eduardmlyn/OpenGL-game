@@ -1,5 +1,3 @@
-#include <vector>
-#include <string>
 #include "../abilityHelper.hpp"
 
 class assassinHelper
@@ -16,7 +14,6 @@ private:
     float criticalDamage = 2.0f;
     StatPairS speed = { 100.0f, 100.0f };
     StatPairS accuracy = { 0.9f, 0.9f };
-    ModificationS modifications = {};
 
     Character* createNewAssassinCharacter();
 
@@ -47,8 +44,7 @@ Character* assassinHelper::createNewAssassinCharacter() {
         criticalChance,
         criticalDamage,
         speed,
-        accuracy,
-        modifications
+        accuracy
     );
 }
 
