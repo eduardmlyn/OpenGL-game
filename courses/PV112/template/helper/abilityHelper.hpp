@@ -8,7 +8,7 @@ private:
     std::vector<AbilityS> tankAbilities;
     std::vector<AbilityS> healerAbilities;
     std::vector<AbilityS> assassinAbilities;
-    
+
     // Ability setters
     void setMageAbilities();
     void setMarksmanAbilities();
@@ -45,5 +45,5 @@ public:
     abilityHelper();
     ~abilityHelper();
 
-    void addAbilitiesToCharacters(std::vector<Character*> characters);
+    void addAbilitiesToCharacters(std::vector<Character *> characters);
 };
