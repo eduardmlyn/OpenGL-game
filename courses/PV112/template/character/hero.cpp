@@ -300,7 +300,16 @@ void Character::updateAccuracy()
     }
 }
 
-void Character::gainMana(float mana)
+void Character::setMana(float mana)
 {
     this->mana.currentValue += mana;
+}
+
+void Character::healHealth(float health) {
+    if (this->health.currentValue + health > this->health.baseValue)
+    {
+        this->health.currentValue = this->health.baseValue;
+        return;
+    } 
+    this->health.currentValue += health;
 }

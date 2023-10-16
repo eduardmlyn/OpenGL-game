@@ -1,10 +1,10 @@
 {
-    "cmake.configureSettings": {
-        "CMAKE_TOOLCHAIN_FILE": "${workspaceFolder}/ext/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_FEATURE_FLAGS": "versions"
-    },
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.sortImports": true
-    }
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "${workspaceFolder}/ext/vcpkg/scripts/buildsystems/vcpkg.cmake",
+    "VCPKG_FEATURE_FLAGS": "versions"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.sortImports": true
+  }
 }

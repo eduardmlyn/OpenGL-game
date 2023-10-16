@@ -17,29 +17,29 @@ private:
     void setAssassinAbilities();
 
     // Mage ability functions
-    bool mageBasicAbility(Character mage, Character enemy, AbilityS abilityData);
-    bool mageFirstAbility();
-    bool mageSecondAbility();
+    bool mageBasicAbility(Character* mage, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool mageFirstAbility(Character* mage, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool mageSecondAbility(Character* mage, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
 
     // Marksman ability functions
-    bool marksmanBasicAbility();
-    bool marksmanFirstAbility();
-    bool marksmanSecondAbility();
+    bool marksmanBasicAbility(Character* marksman, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool marksmanFirstAbility(Character* marksman, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool marksmanSecondAbility(Character* marksman, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
 
     // Tank ability functions
-    bool tankBasicAbility();
-    bool tankFirstAbility();
-    bool tankSecondAbility();
+    bool tankBasicAbility(Character* tank, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool tankFirstAbility(Character* tank, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool tankSecondAbility(Character* tank, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
 
     // Healer ability functions
-    bool healerBasicAbility();
-    bool healerFirstAbility();
-    bool healerSecondAbility();
+    bool healerBasicAbility(Character* healer, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool healerFirstAbility(Character* healer, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool healerSecondAbility(Character* healer, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
 
     // Assassin ability functions
-    bool assassinBasicAbility();
-    bool assassinFirstAbility();
-    bool assassinSecondAbility();
+    bool assassinBasicAbility(Character* assassin, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool assassinFirstAbility(Character* assassin, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
+    bool assassinSecondAbility(Character* assassin, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData);
 
 public:
     abilityHelper();

@@ -20,6 +20,7 @@ private:
     StatPairS speed;
     StatPairS accuracy;
     ModificationS modifications = {}; // TODO change this to all variables set to zero?(do in constructor)
+    // TODO think of buffs vs debuffs and the implementation
     std::vector<AbilityS> abilities;
 
     void updateAttackDamage();
@@ -69,8 +70,9 @@ public:
     void setModifications(ModificationS modifications);
     void updateModificationsAfterTurn();
     void setAbilities(std::vector<AbilityS> abilities);
-    void gainMana(float mana);
+    void setMana(float mana);
     void setAbilities(std::vector<AbilityS> abilities);
+    void healHealth(float health);
 };
 
 // --------------------------
@@ -122,26 +124,5 @@ struct AbilityS
     int baseCooldown;
     int currentCooldown;
     std::string description;
-    bool (*trigger)(Character character, std::vector<Character> enemies, const AbilityS &ability);
+    bool (abilityHelper::*trigger)(Character* character, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS ability);
 };
-
-// struct CharacterS {
-//     std::string name;
-//     ClassE clazz;
-//     float health;
-//     float mana;
-//     float attackDamage;
-//     float abilityDamage;
-//     float armor;
-//     float criticalChance;
-//     float criticalDamage;
-//     float speed;
-//     float accuracy;
-//     bool isTaunting;
-//     ModificationS modifications;
-//     std::vector<AbilityS> abilities;
-//     void useAbility(const AbilityS& ability) {
-//         // TODO add some other functionality?
-//         ability.trigger(*this, ability);
-//     }
-// };
