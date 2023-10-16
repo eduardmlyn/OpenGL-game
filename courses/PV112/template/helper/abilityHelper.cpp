@@ -514,7 +514,7 @@ bool abilityHelper::healerFirstAbility(Character* healer, Character* enemy, Char
 {
     healer->setMana(-60.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
-    for (Character* character: alies)
+    for (Character* &character: alies)
     {
         character->healHealth(healer->getCurrentAP() * abilityData.apRatio);
         // TODO dispelling debuffs
