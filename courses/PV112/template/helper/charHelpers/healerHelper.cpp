@@ -34,6 +34,7 @@ healerHelper::~healerHelper()
 {
 }
 
+// TODO try to extract to .hpp file
 Character *healerHelper::createNewHealerCharacter()
 {
     return new Character(

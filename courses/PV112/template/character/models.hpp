@@ -78,6 +78,7 @@ public:
 // --------------------------
 // CHARACTER ENUMS
 // --------------------------
+
 typedef enum ClassE
 {
     MAGE,
@@ -90,6 +91,7 @@ typedef enum ClassE
 // --------------------------
 // CHARACTER STRUCTS
 // --------------------------
+
 struct ModificationTripleS
 {
     bool percentage;
@@ -112,17 +114,4 @@ struct ModificationS
     ModificationTripleS speed;
     ModificationTripleS accuracy;
     int taunt;
-};
-
-struct AbilityS
-{
-    std::string name;
-    float manaCost;
-    float adRatio;
-    float apRatio;
-    bool isAOE;
-    int baseCooldown;
-    int currentCooldown;
-    std::string description;
-    bool (abilityHelper::*trigger)(Character* character, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS ability);
 };

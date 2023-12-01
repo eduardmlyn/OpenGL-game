@@ -5,12 +5,13 @@
 #include "./charHelpers/mageHelper.cpp"
 #include "./charHelpers/marksmanHelper.cpp"
 #include "./charHelpers/assassinHelper.cpp"
+#include <memory>
 
 class characterHelper
 {
 private:
-  std::vector<Character*> playerCharacters;
-  std::vector<Character*> enemyCharacters;
+  std::vector<Character *> playerCharacters;
+  std::vector<Character *> enemyCharacters;
 
   // helpers
   abilityHelper abilityHelper;
@@ -23,12 +24,13 @@ private:
   void initCharHelpers();
   void initPlayerCharacters();
   void initEnemyCharacters();
+
 public:
   characterHelper();
   ~characterHelper();
 
-  std::vector<Character*> getPlayerCharacters();
-  std::vector<Character*> getEnemyCharacters();
+  std::vector<Character *> getPlayerCharacters();
+  std::vector<Character *> getEnemyCharacters();
 };
 
 characterHelper::characterHelper()
@@ -52,7 +54,8 @@ std::vector<Character *> characterHelper::getEnemyCharacters()
   return enemyCharacters;
 }
 
-void characterHelper::initCharHelpers() {
+void characterHelper::initCharHelpers()
+{
   abilityHelper = abilityHelper::abilityHelper();
   tankHelper = tankHelper::tankHelper();
   healerHelper = healerHelper::healerHelper();

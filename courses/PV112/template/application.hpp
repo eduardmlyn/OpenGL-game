@@ -12,24 +12,28 @@
 #include "pv112_application.hpp"
 #include "sphere.hpp"
 #include "teapot.hpp"
+#include "gameHelpers/gameState.hpp"
 
 // ----------------------------------------------------------------------------
 // UNIFORM STRUCTS
 // ----------------------------------------------------------------------------
-struct CameraUBO {
+struct CameraUBO
+{
     glm::mat4 projection;
     glm::mat4 view;
     glm::vec4 position;
 };
 
-struct LightUBO {
+struct LightUBO
+{
     glm::vec4 position;
     glm::vec4 ambient_color;
     glm::vec4 diffuse_color;
     glm::vec4 specular_color;
 };
 
-struct alignas(256) ObjectUBO {
+struct alignas(256) ObjectUBO
+{
     glm::mat4 model_matrix;  // [  0 -  64) bytes
     glm::vec4 ambient_color; // [ 64 -  80) bytes
     glm::vec4 diffuse_color; // [ 80 -  96) bytes
@@ -42,7 +46,8 @@ struct alignas(256) ObjectUBO {
 const float clear_color[4] = {0.0, 0.0, 0.0, 1.0};
 const float clear_depth[1] = {1.0};
 
-class Application : public PV112Application {
+class Application : public PV112Application
+{
 
     // ----------------------------------------------------------------------------
     // Variables
@@ -50,9 +55,9 @@ class Application : public PV112Application {
     std::filesystem::path images_path;
     std::filesystem::path objects_path;
 
-    // Main program
+    // Programs
     GLuint main_program;
-    // TODO: feel free to add as many as you need/like
+    GLuint menu_program;
 
     // List of geometries used in the project
     std::vector<std::shared_ptr<Geometry>> geometries;
@@ -84,10 +89,13 @@ class Application : public PV112Application {
     // Textures
     GLuint marble_texture = 0;
 
+    // Game Helper classes and variables
+    gameState gameState = gameState::gameState();
+
     // ----------------------------------------------------------------------------
     // Constructors & Destructors
     // ----------------------------------------------------------------------------
-  public:
+public:
     /**
      * Constructs a new @link Application with a custom width and height.
      *

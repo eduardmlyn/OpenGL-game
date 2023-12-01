@@ -7,9 +7,10 @@
 
 using std::make_shared;
 
-GLuint load_texture_2d(const std::filesystem::path filename) {
+GLuint load_texture_2d(const std::filesystem::path filename)
+{
     int width, height, channels;
-    unsigned char* data = stbi_load(filename.generic_string().data(), &width, &height, &channels, 4);
+    unsigned char *data = stbi_load(filename.generic_string().data(), &width, &height, &channels, 4);
 
     GLuint texture;
     glCreateTextures(GL_TEXTURE_2D, 1, &texture);
@@ -34,7 +35,8 @@ GLuint load_texture_2d(const std::filesystem::path filename) {
 }
 
 Application::Application(int initial_width, int initial_height, std::vector<std::string> arguments)
-    : PV112Application(initial_width, initial_height, arguments) {
+    : PV112Application(initial_width, initial_height, arguments)
+{
     this->width = initial_width;
     this->height = initial_height;
 
@@ -89,7 +91,8 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     compile_shaders();
 }
 
-Application::~Application() {
+Application::~Application()
+{
     delete_shaders();
 
     glDeleteBuffers(1, &camera_buffer);
@@ -103,14 +106,34 @@ Application::~Application() {
 
 void Application::delete_shaders() {}
 
-void Application::compile_shaders() {
+void Application::compile_shaders()
+{
     delete_shaders();
     main_program = create_program(lecture_shaders_path / "main.vert", lecture_shaders_path / "main.frag");
 }
 
 void Application::update(float delta) {}
 
-void Application::render() {
+void Application::render()
+{
+    // TODO Change rendering functions based on the game state
+    switch (gameState.currentState)
+    {
+    case GAME_MENU:
+        break;
+    case GAME_EXIT:
+        break;
+    case PLAY_VS_AI:
+        break;
+    case PLAY_LOCAL_PVP:
+        break;
+    case HOW_TO_PLAY:
+        break;
+    case PLAY_MENU:
+        break;
+    default:
+        break;
+    }
     // --------------------------------------------------------------------------
     // Update UBOs
     // --------------------------------------------------------------------------
@@ -145,7 +168,7 @@ void Application::render() {
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 0 * 256, sizeof(ObjectUBO));
-    
+
     glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
     sphere->draw();
 
@@ -164,14 +187,16 @@ void Application::render_ui() { const float unit = ImGui::GetFontSize(); }
 // Input Events
 // ----------------------------------------------------------------------------
 
-void Application::on_resize(int width, int height) {
+void Application::on_resize(int width, int height)
+{
     // Calls the default implementation to set the class variables.
     PV112Application::on_resize(width, height);
 }
 
 void Application::on_mouse_move(double x, double y) { camera.on_mouse_move(x, y); }
 void Application::on_mouse_button(int button, int action, int mods) { camera.on_mouse_button(button, action, mods); }
-void Application::on_key_pressed(int key, int scancode, int action, int mods) {
+void Application::on_key_pressed(int key, int scancode, int action, int mods)
+{
     // Calls default implementation that invokes compile_shaders when 'R key is hit.
     PV112Application::on_key_pressed(key, scancode, action, mods);
 }

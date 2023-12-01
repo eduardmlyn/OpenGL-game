@@ -13,8 +13,7 @@ void abilityHelper::setMageAbilities()
         0,
         0,
         "Deals damage to target enemy and gains 8 mana.",
-        mageBasicAbility
-    };
+        mageBasicAbility};
     this->mageAbilities.push_back(basicAttack);
 
     // First special ability
@@ -27,8 +26,7 @@ void abilityHelper::setMageAbilities()
         4,
         0,
         "Deals damage to target enemy and shreds defense for 2 turns.",
-        mageFirstAbility
-    };
+        mageFirstAbility};
     this->mageAbilities.push_back(firstSpecial);
 
     // Second special ability
@@ -41,8 +39,7 @@ void abilityHelper::setMageAbilities()
         6,
         0,
         "Deals damage to ALL enemies and dispells buffs on target enemy.",
-        mageSecondAbility
-    };
+        mageSecondAbility};
     this->mageAbilities.push_back(secondSpecial);
 }
 
@@ -58,8 +55,7 @@ void abilityHelper::setMarksmanAbilities()
         0,
         0,
         "Deals damage to target enemy and gains 5 mana.",
-        marksmanBasicAbility
-    };
+        marksmanBasicAbility};
     this->marksmanAbilities.push_back(basicAttack);
 
     // First special ability
@@ -72,8 +68,7 @@ void abilityHelper::setMarksmanAbilities()
         3,
         0,
         "Deals damage to target enemy three times.",
-        marksmanFirstAbility
-    };
+        marksmanFirstAbility};
     this->marksmanAbilities.push_back(firstSpecial);
 
     // Second special ability
@@ -86,8 +81,7 @@ void abilityHelper::setMarksmanAbilities()
         2,
         0,
         "Gain speed up, attack damage and accuracy up.",
-        marksmanSecondAbility
-    };
+        marksmanSecondAbility};
     this->marksmanAbilities.push_back(secondSpecial);
 }
 
@@ -103,8 +97,7 @@ void abilityHelper::setTankAbilities()
         0,
         0,
         "Deals damage to target enemy, gains 5 mana and defense up(for 2 turns).",
-        tankBasicAbility
-    };
+        tankBasicAbility};
     this->tankAbilities.push_back(basicAttack);
 
     // First special ability
@@ -119,8 +112,7 @@ void abilityHelper::setTankAbilities()
         "Heals you for a small portion, gives all allies attack and ability damage up"
         "and accuracy up(for 2 turns)."
         "Also gains defense up(for 3 turns).",
-        tankFirstAbility
-    };
+        tankFirstAbility};
     this->tankAbilities.push_back(firstSpecial);
 
     // Second special ability
@@ -134,8 +126,7 @@ void abilityHelper::setTankAbilities()
         0,
         "Gain taunt and defense up for 2 turns."
         "Deal damage to target enemy and inflict enemy with defense down and accuracy down for 1 turn.",
-        tankSecondAbility
-    };
+        tankSecondAbility};
     this->tankAbilities.push_back(secondSpecial);
 }
 
@@ -152,8 +143,7 @@ void abilityHelper::setHealerAbilities()
         0,
         0,
         "Deals damage to target enemy and gains 5 mana.",
-        healerBasicAbility
-    };
+        healerBasicAbility};
     this->healerAbilities.push_back(basicAttack);
 
     // First special ability
@@ -166,8 +156,7 @@ void abilityHelper::setHealerAbilities()
         4,
         0,
         "Heals and dispells all debuffs from all allies.",
-        healerFirstAbility
-    };
+        healerFirstAbility};
     this->healerAbilities.push_back(firstSpecial);
 
     // Second special ability
@@ -180,8 +169,7 @@ void abilityHelper::setHealerAbilities()
         3,
         0,
         "Heals target ally and grants speed up, defense up and accuracy up to the ally for 2 turns.",
-        healerSecondAbility
-    };
+        healerSecondAbility};
     this->healerAbilities.push_back(secondSpecial);
 }
 
@@ -198,8 +186,7 @@ void abilityHelper::setAssassinAbilities()
         0,
         "Deals damage to target enemy, gains 5 mana."
         "This attack deals more damage when the target is below 50\% health.",
-        assassinBasicAbility
-    };
+        assassinBasicAbility};
     this->assassinAbilities.push_back(basicAttack);
 
     // First special ability
@@ -212,8 +199,7 @@ void abilityHelper::setAssassinAbilities()
         5,
         5,
         "Deal damage to target enemy, instantly killing the target if it was below 25\% health.",
-        assassinFirstAbility
-    };
+        assassinFirstAbility};
     this->assassinAbilities.push_back(firstSpecial);
 
     // Second special ability
@@ -227,8 +213,7 @@ void abilityHelper::setAssassinAbilities()
         0,
         "Gain speed up, accuracy up, critical chance up and stealth(cannot be targeted) for 1 turn."
         "Inflict accuracy down, defense down, damage down to target enemy.",
-        assassinSecondAbility
-    };
+        assassinSecondAbility};
     this->assassinAbilities.push_back(secondSpecial);
 }
 
@@ -284,7 +269,7 @@ bool getChanceBoolean(float charChance)
     return charChance >= chance;
 }
 
-bool abilityHelper::mageBasicAbility(Character* mage, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData)
+bool abilityHelper::mageBasicAbility(Character *mage, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
 {
     mage->setMana(8.0f);
     float damageDealt = mage->getCurrentAD() * abilityData.adRatio;
@@ -301,8 +286,8 @@ bool abilityHelper::mageBasicAbility(Character* mage, Character* enemy, Characte
     return true;
 }
 
-
-bool abilityHelper::mageFirstAbility(Character* mage, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData) {
+bool abilityHelper::mageFirstAbility(Character *mage, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
+{
     mage->setMana(-45.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
     float damageDealt = mage->getCurrentAP() * abilityData.apRatio;
@@ -315,13 +300,13 @@ bool abilityHelper::mageFirstAbility(Character* mage, Character* enemy, Characte
         return false;
     }
     ModificationS debuffModifications = {
-        { false, 0.0f, 0 },  // AD
-        { false, 0.0f, 0 },  // AP
-        { true, -0.25f, 2 }, // armor
-        { false, 0.0f, 0 },  // crit chance
-        { false, 0.0f, 0 },  // speed
-        { false, 0.0f, 0 },  // accuracy
-        0                    // taunt
+        {false, 0.0f, 0},  // AD
+        {false, 0.0f, 0},  // AP
+        {true, -0.25f, 2}, // armor
+        {false, 0.0f, 0},  // crit chance
+        {false, 0.0f, 0},  // speed
+        {false, 0.0f, 0},  // accuracy
+        0                  // taunt
     };
     enemy->setModifications(debuffModifications);
     damageDealt -= enemy->getCurrentArmor();
@@ -329,7 +314,7 @@ bool abilityHelper::mageFirstAbility(Character* mage, Character* enemy, Characte
     return true;
 }
 
-bool abilityHelper::mageSecondAbility(Character* mage, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData)
+bool abilityHelper::mageSecondAbility(Character *mage, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
 {
     mage->setMana(-60.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
@@ -342,14 +327,16 @@ bool abilityHelper::mageSecondAbility(Character* mage, Character* enemy, Charact
     {
         return false;
     }
-    for (Character *&character : enemies) {
+    for (Character *&character : enemies)
+    {
         character->receiveDamage(damageDealt - character->getCurrentArmor());
     }
     // TODO dispelling buffs?
     return true;
 }
 
-bool abilityHelper::marksmanBasicAbility(Character* marksman, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData) {
+bool abilityHelper::marksmanBasicAbility(Character *marksman, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
+{
     marksman->setMana(5.0f);
     float damageDealt = marksman->getCurrentAD() * abilityData.adRatio;
     if (getChanceBoolean(marksman->getCurrentCriticalChance()))
@@ -365,20 +352,21 @@ bool abilityHelper::marksmanBasicAbility(Character* marksman, Character* enemy, 
     return true;
 }
 
-bool abilityHelper::marksmanFirstAbility(Character* marksman, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData) {
+bool abilityHelper::marksmanFirstAbility(Character *marksman, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
+{
     marksman->setMana(-20.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
     if (!getChanceBoolean(marksman->getCurrentAccuracy()))
-    {   
+    {
         return false;
     }
     float damageDealt = marksman->getCurrentAD() * abilityData.adRatio;
     for (size_t i = 0; i < 3; i++)
-    {  
+    {
         if (getChanceBoolean(marksman->getCurrentCriticalChance()))
         {
             damageDealt *= marksman->getCriticalDamage();
-        }    
+        }
         damageDealt -= enemy->getCurrentArmor();
         enemy->receiveDamage(damageDealt);
         damageDealt += enemy->getCurrentArmor();
@@ -386,24 +374,25 @@ bool abilityHelper::marksmanFirstAbility(Character* marksman, Character* enemy, 
     return true;
 }
 
-bool abilityHelper::marksmanSecondAbility(Character* marksman, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData) {
+bool abilityHelper::marksmanSecondAbility(Character *marksman, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
+{
     marksman->setMana(-15.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
     ModificationS buffModifications = {
-        { false, 15.0f, 1 }, // AD
-        { false, 0.0f, 0 },  // AP
-        { false, 0.0f, 0 },  // armor
-        { false, 0.0f, 0 },  // crit chance
-        { false, 20.0f, 1 }, // speed
-        { false, 0.2f, 1 },  // accuracy
-        0                    // taunt
+        {false, 15.0f, 1}, // AD
+        {false, 0.0f, 0},  // AP
+        {false, 0.0f, 0},  // armor
+        {false, 0.0f, 0},  // crit chance
+        {false, 20.0f, 1}, // speed
+        {false, 0.2f, 1},  // accuracy
+        0                  // taunt
     };
     marksman->setModifications(buffModifications);
     return true;
 }
 
-
-bool abilityHelper::tankBasicAbility(Character* tank, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData) {
+bool abilityHelper::tankBasicAbility(Character *tank, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
+{
     tank->setMana(5.0f);
     float damageDealt = tank->getCurrentAD() * abilityData.adRatio;
     if (getChanceBoolean(tank->getCurrentCriticalChance()))
@@ -415,13 +404,13 @@ bool abilityHelper::tankBasicAbility(Character* tank, Character* enemy, Characte
         return false;
     }
     ModificationS buffModifications = {
-        { false, 0.0f, 0 }, // AD
-        { false, 0.0f, 0 }, // AP
-        { false, 5.0f, 2 }, // armor
-        { false, 0.0f, 0 }, // crit chance
-        { false, 0.0f, 0 }, // speed
-        { false, 0.0f, 0 }, // accuracy
-        0                   // taunt
+        {false, 0.0f, 0}, // AD
+        {false, 0.0f, 0}, // AP
+        {false, 5.0f, 2}, // armor
+        {false, 0.0f, 0}, // crit chance
+        {false, 0.0f, 0}, // speed
+        {false, 0.0f, 0}, // accuracy
+        0                 // taunt
     };
     tank->setModifications(buffModifications);
     damageDealt -= enemy->getCurrentArmor();
@@ -429,25 +418,27 @@ bool abilityHelper::tankBasicAbility(Character* tank, Character* enemy, Characte
     return true;
 }
 
-bool abilityHelper::tankFirstAbility(Character* tank, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData) {
+bool abilityHelper::tankFirstAbility(Character *tank, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
+{
     tank->setMana(-25.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
     tank->healHealth(10.0f);
     ModificationS buffModifications = {
-        { false, 10.0f, 1 }, // AD
-        { false, 10.0f, 1 }, // AP
-        { false, 0.0f, 0 },  // armor
-        { false, 0.0f, 0 },  // crit chance
-        { false, 0.0f, 0 },  // speed
-        { false, 0.05f, 1 }, // accuracy
-        0                    // taunt
+        {false, 10.0f, 1}, // AD
+        {false, 10.0f, 1}, // AP
+        {false, 0.0f, 0},  // armor
+        {false, 0.0f, 0},  // crit chance
+        {false, 0.0f, 0},  // speed
+        {false, 0.05f, 1}, // accuracy
+        0                  // taunt
     };
-    for (Character *&character : alies) {
+    for (Character *&character : alies)
+    {
         if (character->getClass() == TANK)
         {
-            buffModifications.armor = { false, 10.0f, 1 };
+            buffModifications.armor = {false, 10.0f, 1};
             character->setModifications(buffModifications);
-            buffModifications.armor = { false, 0.0f, 0 };
+            buffModifications.armor = {false, 0.0f, 0};
             continue;
         }
         character->setModifications(buffModifications);
@@ -455,7 +446,8 @@ bool abilityHelper::tankFirstAbility(Character* tank, Character* enemy, Characte
     return true;
 }
 
-bool abilityHelper::tankSecondAbility(Character* tank, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData) {
+bool abilityHelper::tankSecondAbility(Character *tank, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
+{
     tank->setMana(-15.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
     float damageDealt = tank->getCurrentAD() * abilityData.adRatio;
@@ -468,23 +460,23 @@ bool abilityHelper::tankSecondAbility(Character* tank, Character* enemy, Charact
         return false;
     }
     ModificationS buffModifications = {
-        { false, 0.0f, 0 },  // AD
-        { false, 0.0f, 0 },  // AP
-        { false, 15.0f, 2 }, // armor
-        { false, 0.0f, 0 },  // crit chance
-        { false, 0.0f, 0 },  // speed
-        { false, 0.0f, 0 },  // accuracy
-        2                    // taunt
+        {false, 0.0f, 0},  // AD
+        {false, 0.0f, 0},  // AP
+        {false, 15.0f, 2}, // armor
+        {false, 0.0f, 0},  // crit chance
+        {false, 0.0f, 0},  // speed
+        {false, 0.0f, 0},  // accuracy
+        2                  // taunt
     };
     tank->setModifications(buffModifications);
     ModificationS debuffModifications = {
-        { false, 0.0f, 0 },   // AD
-        { false, 0.0f, 0 },   // AP
-        { false, -15.0f, 2 }, // armor
-        { false, 0.0f, 0 },   // crit chance
-        { false, 0.0f, 0 },   // speed
-        { false, -0.15f, 2 }, // accuracy
-        0                     // taunt
+        {false, 0.0f, 0},   // AD
+        {false, 0.0f, 0},   // AP
+        {false, -15.0f, 2}, // armor
+        {false, 0.0f, 0},   // crit chance
+        {false, 0.0f, 0},   // speed
+        {false, -0.15f, 2}, // accuracy
+        0                   // taunt
     };
     damageDealt -= enemy->getCurrentArmor();
     enemy->receiveDamage(damageDealt);
@@ -492,8 +484,7 @@ bool abilityHelper::tankSecondAbility(Character* tank, Character* enemy, Charact
     return true;
 }
 
-
-bool abilityHelper::healerBasicAbility(Character* healer, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData)
+bool abilityHelper::healerBasicAbility(Character *healer, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
 {
     healer->setMana(5.0f);
     float damageDealt = healer->getCurrentAD() * abilityData.adRatio + healer->getCurrentAP() * abilityData.apRatio;
@@ -510,11 +501,11 @@ bool abilityHelper::healerBasicAbility(Character* healer, Character* enemy, Char
     return true;
 }
 
-bool abilityHelper::healerFirstAbility(Character* healer, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData)
+bool abilityHelper::healerFirstAbility(Character *healer, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
 {
     healer->setMana(-60.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
-    for (Character* &character: alies)
+    for (Character *&character : alies)
     {
         character->healHealth(healer->getCurrentAP() * abilityData.apRatio);
         // TODO dispelling debuffs
@@ -523,25 +514,25 @@ bool abilityHelper::healerFirstAbility(Character* healer, Character* enemy, Char
 }
 
 // TODO this could be easily changed to target instead of enemy/ally -> might be easier to implement in the long run as well
-bool abilityHelper::healerSecondAbility(Character* healer, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData)
+bool abilityHelper::healerSecondAbility(Character *healer, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
 {
     healer->setMana(-50.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
     ally->healHealth(healer->getCurrentAP() * abilityData.apRatio);
     ModificationS buffModifications = {
-        { false, 0.0f, 0 },  // AD
-        { false, 0.0f, 0 },  // AP
-        { false, 10.0f, 1 }, // armor
-        { false, 0.0f, 0 },  // crit chance,
-        { false, 25.0f, 1 }, // speed
-        { false, 0.1f, 1 },  // accuracy
-        0                    // taunt
+        {false, 0.0f, 0},  // AD
+        {false, 0.0f, 0},  // AP
+        {false, 10.0f, 1}, // armor
+        {false, 0.0f, 0},  // crit chance,
+        {false, 25.0f, 1}, // speed
+        {false, 0.1f, 1},  // accuracy
+        0                  // taunt
     };
     ally->setModifications(buffModifications);
     return true;
 }
 
-bool abilityHelper::assassinBasicAbility(Character* assassin, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData)
+bool abilityHelper::assassinBasicAbility(Character *assassin, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
 {
     assassin->setMana(5.0f);
     float damageDealt = assassin->getCurrentAD() * abilityData.adRatio;
@@ -549,7 +540,7 @@ bool abilityHelper::assassinBasicAbility(Character* assassin, Character* enemy, 
     {
         damageDealt += assassin->getCurrentAP() * abilityData.apRatio;
     }
-    
+
     if (getChanceBoolean(assassin->getCurrentCriticalChance()))
     {
         damageDealt *= assassin->getCriticalDamage();
@@ -563,7 +554,7 @@ bool abilityHelper::assassinBasicAbility(Character* assassin, Character* enemy, 
     return true;
 }
 
-bool abilityHelper::assassinFirstAbility(Character* assassin, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData)
+bool abilityHelper::assassinFirstAbility(Character *assassin, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
 {
     assassin->setMana(-50.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
@@ -572,7 +563,7 @@ bool abilityHelper::assassinFirstAbility(Character* assassin, Character* enemy, 
     {
         damageDealt = 9999.0f; // "guarantee" killing blow
     }
-    
+
     if (getChanceBoolean(assassin->getCurrentCriticalChance()))
     {
         damageDealt *= assassin->getCriticalDamage();
@@ -586,27 +577,28 @@ bool abilityHelper::assassinFirstAbility(Character* assassin, Character* enemy, 
     return true;
 }
 
-bool assassinSecondAbility(Character* assassin, Character* enemy, Character* ally, std::vector<Character*> alies, std::vector<Character*> enemies, AbilityS abilityData) {
+bool abilityHelper::assassinSecondAbility(Character *assassin, Character *enemy, Character *ally, std::vector<Character *> alies, std::vector<Character *> enemies, AbilityS abilityData)
+{
     assassin->setMana(-25.0f);
     abilityData.currentCooldown = abilityData.baseCooldown;
     ModificationS buffModifications = {
-        { false, 0.0f, 0 },  // AD
-        { false, 0.0f, 0 },  // AP
-        { false, 0.0f, 0 },  // armor
-        { false, 0.15f, 1 }, // crit chance
-        { false, 20.0f, 1 }, // speed
-        { false, 0.1f, 1 },  // accuracy
-        0                    // taunt
+        {false, 0.0f, 0},  // AD
+        {false, 0.0f, 0},  // AP
+        {false, 0.0f, 0},  // armor
+        {false, 0.15f, 1}, // crit chance
+        {false, 20.0f, 1}, // speed
+        {false, 0.1f, 1},  // accuracy
+        0                  // taunt
     };
     assassin->setModifications(buffModifications);
     ModificationS debuffModifications = {
-        { false, -5.0f, 1 },  // AD
-        { false, -5.0f, 1 },  // AP
-        { false, -10.0f, 1 }, // armor
-        { false, 0.0f, 0 },   // crit chance
-        { false, 0.0f, 0 },   // speed
-        { false, -0.1f, 1 },  // accuracy
-        0                     // taunt
+        {false, -5.0f, 1},  // AD
+        {false, -5.0f, 1},  // AP
+        {false, -10.0f, 1}, // armor
+        {false, 0.0f, 0},   // crit chance
+        {false, 0.0f, 0},   // speed
+        {false, -0.1f, 1},  // accuracy
+        0                   // taunt
     };
     enemy->setModifications(debuffModifications);
 }
