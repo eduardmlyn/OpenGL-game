@@ -1,0 +1,46 @@
+#include "gameState.hpp"
+
+void gameState::Back()
+{
+    previousStates.pop_back();
+    if (previousStates.empty())
+    {
+        this->Exit();
+    }
+};
+
+void gameState::Exit()
+{
+    previousStates.clear();
+    currentState = GAME_EXIT;
+}
+
+void gameState::GameMenu()
+{
+    previousStates.push_back(currentState);
+    currentState = GAME_MENU;
+}
+
+void gameState::PlayVsAI()
+{
+    previousStates.push_back(currentState);
+    currentState = PLAY_VS_AI;
+}
+
+void gameState::PlayLocalPVP()
+{
+    previousStates.push_back(currentState);
+    currentState = PLAY_LOCAL_PVP;
+}
+
+void gameState::HowToPlay()
+{
+    previousStates.push_back(currentState);
+    currentState = HOW_TO_PLAY;
+}
+
+void gameState::PlayMenu()
+{
+    previousStates.push_back(currentState);
+    currentState = PLAY_MENU;
+}
