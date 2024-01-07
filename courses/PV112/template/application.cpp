@@ -1,6 +1,7 @@
 #include "application.hpp"
 
 #include <memory>
+#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -37,6 +38,7 @@ GLuint load_texture_2d(const std::filesystem::path filename)
 Application::Application(int initial_width, int initial_height, std::vector<std::string> arguments)
     : PV112Application(initial_width, initial_height, arguments)
 {
+    renderer = Renderer::Renderer();
     this->width = initial_width;
     this->height = initial_height;
 
@@ -117,23 +119,28 @@ void Application::update(float delta) {}
 void Application::render()
 {
     // TODO Change rendering functions based on the game state
-    switch (gameState.currentState)
-    {
-    case GAME_MENU:
-        break;
-    case GAME_EXIT:
-        break;
-    case PLAY_VS_AI:
-        break;
-    case PLAY_LOCAL_PVP:
-        break;
-    case HOW_TO_PLAY:
-        break;
-    case PLAY_MENU:
-        break;
-    default:
-        break;
-    }
+    // switch (gameState.currentState)
+    // {
+    // case GAME_MENU:
+    //     // renderer.menuRender(menu_program);
+    //     break;
+    // case GAME_EXIT:
+    //     // TODO exit the program
+    //     break;
+    // case PLAY_VS_AI:
+    //     renderer.aiPlayRender(ai_program);
+    //     break;
+    // case PLAY_LOCAL_PVP:
+    //     renderer.localPvPRender(pvp_program);
+    //     break;
+    // case HOW_TO_PLAY:
+    //     renderer.howToPlayRender(how_to_play_program);
+    //     break;
+    // case PLAY_MENU:
+    //     renderer.playMenuRender(play_program);
+    //     break;
+    // }
+
     // --------------------------------------------------------------------------
     // Update UBOs
     // --------------------------------------------------------------------------
@@ -170,7 +177,7 @@ void Application::render()
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 0 * 256, sizeof(ObjectUBO));
 
     glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
-    sphere->draw();
+    // sphere->draw();
 
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
@@ -178,10 +185,33 @@ void Application::render()
 
     glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
     glBindTextureUnit(3, marble_texture);
-    bunny->draw();
+    // bunny->draw();
 }
 
-void Application::render_ui() { const float unit = ImGui::GetFontSize(); }
+void Application::render_ui()
+{
+    switch (gameState.currentState)
+    {
+    case GAME_MENU:
+        renderer.menuRender(width, height, &gameState);
+        // break;
+        // case GAME_EXIT:
+        //     // TODO exit the program
+        //     break;
+        // case PLAY_VS_AI:
+        //     // renderer.aiPlayRender(ai_program);
+        //     break;
+        // case PLAY_LOCAL_PVP:
+        //     // renderer.localPvPRender(pvp_program);
+        //     break;
+        // case HOW_TO_PLAY:
+        //     // renderer.howToPlayRender(how_to_play_program);
+        //     break;
+        // case PLAY_MENU:
+        //     // renderer.playMenuRender(play_program);
+        //     break;
+    }
+}
 
 // ----------------------------------------------------------------------------
 // Input Events
@@ -193,8 +223,14 @@ void Application::on_resize(int width, int height)
     PV112Application::on_resize(width, height);
 }
 
-void Application::on_mouse_move(double x, double y) { camera.on_mouse_move(x, y); }
-void Application::on_mouse_button(int button, int action, int mods) { camera.on_mouse_button(button, action, mods); }
+void Application::on_mouse_move(double x, double y)
+{
+    camera.on_mouse_move(x, y);
+}
+void Application::on_mouse_button(int button, int action, int mods)
+{
+    camera.on_mouse_button(button, action, mods);
+}
 void Application::on_key_pressed(int key, int scancode, int action, int mods)
 {
     // Calls default implementation that invokes compile_shaders when 'R key is hit.

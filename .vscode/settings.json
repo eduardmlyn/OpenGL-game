@@ -5,10 +5,13 @@
   },
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.sortImports": true
+    "source.sortImports": "explicit"
   },
   "files.associations": {
     "vector": "cpp",
-    "memory": "cpp"
-  }
+    "memory": "cpp",
+    "chrono": "cpp",
+    "format": "cpp"
+  },
+  "C_Cpp.dimInactiveRegions": false
 }

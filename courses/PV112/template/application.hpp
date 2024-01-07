@@ -10,9 +10,11 @@
 #include "camera.h"
 #include "cube.hpp"
 #include "pv112_application.hpp"
+#include "renderHelpers/renderHelper.hpp"
 #include "sphere.hpp"
 #include "teapot.hpp"
-#include "gameHelpers/gameState.hpp"
+// #include "gameHelpers/gameState.hpp"
+// #include "helper/characterHelper.cpp"
 
 // ----------------------------------------------------------------------------
 // UNIFORM STRUCTS
@@ -58,6 +60,10 @@ class Application : public PV112Application
     // Programs
     GLuint main_program;
     GLuint menu_program;
+    GLuint ai_program;
+    GLuint pvp_program; // TODO maybe same like ai_program
+    GLuint how_to_play_program;
+    GLuint play_program;
 
     // List of geometries used in the project
     std::vector<std::shared_ptr<Geometry>> geometries;
@@ -91,6 +97,11 @@ class Application : public PV112Application
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();
+
+    // characterHelper charHelper = characterHelper::characterHelper();
+
+    // Renderer helper class
+    Renderer renderer;
 
     // ----------------------------------------------------------------------------
     // Constructors & Destructors
