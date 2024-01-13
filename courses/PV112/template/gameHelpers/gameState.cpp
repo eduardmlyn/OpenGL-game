@@ -2,11 +2,13 @@
 
 void gameState::Back()
 {
-    previousStates.pop_back();
     if (previousStates.empty())
     {
         this->Exit();
+        return;
     }
+    currentState = previousStates.back();
+    previousStates.pop_back();
 };
 
 void gameState::Exit()
@@ -43,4 +45,12 @@ void gameState::PlayMenu()
 {
     previousStates.push_back(currentState);
     currentState = PLAY_MENU;
+}
+
+void gameState::PrintStateList()
+{
+    for (const auto &element : previousStates)
+    {
+        std::cout << element << ", ";
+    }
 }

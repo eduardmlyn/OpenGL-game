@@ -8,12 +8,16 @@
         "glm",
         {
             "name": "imgui",
-            "features": [ "opengl3-binding", "glfw-binding" ]
+            "features": [
+                "opengl3-binding",
+                "glfw-binding"
+            ]
         },
         "toml11",
         "tinyobjloader",
         "gtest",
         "lodepng",
-        "stb"
+        "stb",
+        "openal-soft"
     ]
 }

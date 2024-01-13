@@ -119,27 +119,21 @@ void Application::update(float delta) {}
 void Application::render()
 {
     // TODO Change rendering functions based on the game state
-    // switch (gameState.currentState)
-    // {
-    // case GAME_MENU:
-    //     // renderer.menuRender(menu_program);
-    //     break;
-    // case GAME_EXIT:
-    //     // TODO exit the program
-    //     break;
-    // case PLAY_VS_AI:
-    //     renderer.aiPlayRender(ai_program);
-    //     break;
-    // case PLAY_LOCAL_PVP:
-    //     renderer.localPvPRender(pvp_program);
-    //     break;
-    // case HOW_TO_PLAY:
-    //     renderer.howToPlayRender(how_to_play_program);
-    //     break;
-    // case PLAY_MENU:
-    //     renderer.playMenuRender(play_program);
-    //     break;
-    // }
+    switch (gameState.currentState)
+    {
+    case GAME_MENU:
+        // renderer.menuRender(menu_program);
+        break;
+    case PLAY_VS_AI:
+        //     renderer.aiPlayRender(ai_program);
+        break;
+    case PLAY_LOCAL_PVP:
+        //     renderer.localPvPRender(pvp_program);
+        break;
+    case PLAY_MENU:
+        //     renderer.playMenuRender(play_program);
+        break;
+    }
 
     // --------------------------------------------------------------------------
     // Update UBOs
@@ -194,19 +188,19 @@ void Application::render_ui()
     {
     case GAME_MENU:
         renderer.menuRender(width, height, &gameState);
-        // break;
-        // case GAME_EXIT:
-        //     // TODO exit the program
-        //     break;
-        // case PLAY_VS_AI:
-        //     // renderer.aiPlayRender(ai_program);
-        //     break;
-        // case PLAY_LOCAL_PVP:
-        //     // renderer.localPvPRender(pvp_program);
-        //     break;
-        // case HOW_TO_PLAY:
-        //     // renderer.howToPlayRender(how_to_play_program);
-        //     break;
+        break;
+    case GAME_EXIT:
+        this->~Application();
+        break;
+    // case PLAY_VS_AI:
+    //     // renderer.aiPlayRender(ai_program);
+    //     break;
+    // case PLAY_LOCAL_PVP:
+    //     // renderer.localPvPRender(pvp_program);
+    //     break;
+    case HOW_TO_PLAY:
+        renderer.howToPlayRender(width, height, &gameState);
+        break;
         // case PLAY_MENU:
         //     // renderer.playMenuRender(play_program);
         //     break;
@@ -225,6 +219,7 @@ void Application::on_resize(int width, int height)
 
 void Application::on_mouse_move(double x, double y)
 {
+    // std::cout << x << " - x position" << std::endl;
     camera.on_mouse_move(x, y);
 }
 void Application::on_mouse_button(int button, int action, int mods)

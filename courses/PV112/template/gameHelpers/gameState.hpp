@@ -1,4 +1,5 @@
 #include <list>
+#include <iostream>
 
 enum gameStateE
 {
@@ -53,4 +54,6 @@ public:
      * Changes the state to PLAY_MENU.
      */
     void PlayMenu();
+
+    void PrintStateList();
 };
