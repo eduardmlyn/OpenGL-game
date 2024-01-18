@@ -95,6 +95,7 @@ class Application : public PV112Application
 
     // Textures
     GLuint marble_texture = 0;
+    GLuint gear_texture = 0;
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();

@@ -8,7 +8,9 @@ struct colorS
 enum colorE
 {
     GOLD,
-    DEEP_PURPLE
+    DEEP_PURPLE,
+    SILVER,
+    LIGHT_BLACK
 };
 
 class colors
@@ -25,6 +27,10 @@ public:
             return colorS(218, 165, 32);
         case DEEP_PURPLE:
             return colorS(54, 1, 63);
+        case SILVER:
+            return colorS(195, 195, 195);
+        case LIGHT_BLACK:
+            return colorS(45, 45, 45);
         default:
             break;
         }

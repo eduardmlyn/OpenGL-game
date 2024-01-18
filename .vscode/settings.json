@@ -12,7 +12,8 @@
     "memory": "cpp",
     "chrono": "cpp",
     "format": "cpp",
-    "list": "cpp"
+    "list": "cpp",
+    "cmath": "cpp"
   },
   "C_Cpp.dimInactiveRegions": false
 }

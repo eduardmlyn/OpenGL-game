@@ -52,8 +52,25 @@ void Renderer::howToPlayRender(int width, int height, gameState *state)
     ImGui::End();
 }
 
-void Renderer::aiPlayRender(GLuint program)
+void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gearTexture)
 {
+    ImGuiStyle *style = &ImGui::GetStyle();
+    ImGui::StyleColorsDark(style);
+    colorS silver = cHelper.getColor(SILVER);
+    colorS lightBlack = cHelper.getColor(LIGHT_BLACK);
+    // style->Colors[ImGuiCol_WindowBg] = mapRGBAToVectorColor(silver.red, d_purple.green, d_purple.blue, 0.5f);
+    style->Colors[ImGuiCol_Button] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.5f);
+    style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 1.f);
+    // style->Colors[ImGuiCol_Text] = mapRGBAToVectorColor(gold.red, gold.green, gold.blue, 1.f);
+    // style->WindowRounding = 1.f;
+    // style->WindowBorderSize = 1.f;
+    // const float unit = ImGui::GetFontSize();
+    // float window_width = width - 4 * unit;
+    ImGui::Begin("Play Menu", nullptr, playMenuFlags);
+    if (ImGui::ImageButton((void*)(intptr_t)gearTexture, ImVec2(32, 32))) {
+        state->PlayMenu();
+    }
+    ImGui::End();
 }
 
 void Renderer::playMenuRender(GLuint program)

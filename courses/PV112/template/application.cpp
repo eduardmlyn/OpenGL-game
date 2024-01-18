@@ -16,7 +16,7 @@ GLuint load_texture_2d(const std::filesystem::path filename)
     GLuint texture;
     glCreateTextures(GL_TEXTURE_2D, 1, &texture);
 
-    glTextureStorage2D(texture, std::log2(width), GL_RGBA8, width, height);
+    glTextureStorage2D(texture, (GLsizei)std::log2(width), GL_RGBA8, width, height);
 
     glTextureSubImage2D(texture,
                         0,                         //
@@ -58,6 +58,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     objTest = geometries[2];
 
     marble_texture = load_texture_2d(images_path / "bunny.jpg");
+    gear_texture = load_texture_2d(images_path / "gear.png");
 
     // --------------------------------------------------------------------------
     // Initialize UBO Data
@@ -164,12 +165,7 @@ void Application::render()
     glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
     // sphere->draw();
 
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
-    glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
-    glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
-
-    glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
-    glBindTextureUnit(3, marble_texture);
+    
 
     // TODO Change rendering functions based on the game state
     switch (gameState.currentState)
@@ -177,18 +173,23 @@ void Application::render()
     case GAME_MENU:
         // renderer.menuRender(menu_program);
         break;
+    case PLAY_MENU: // TODO think about the pvp play similarly to ai play, maybe have it fall down in rendering as well
     case PLAY_VS_AI:
+        // glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
+        // glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
+        // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
+        // glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
+        // objTest->draw();
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
         glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
-        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
+        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
+
         glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
-        objTest->draw();
+        glBindTextureUnit(3, marble_texture);
+        bunny->draw();
         break;
     case PLAY_LOCAL_PVP:
         //     renderer.localPvPRender(pvp_program);
-        break;
-    case PLAY_MENU:
-        //     renderer.playMenuRender(play_program);
         break;
     }
     // bunny->draw();
@@ -204,9 +205,9 @@ void Application::render_ui()
     case GAME_EXIT:
         this->~Application();
         break;
-    // case PLAY_VS_AI:
-    //     // renderer.aiPlayRender(ai_program);
-    //     break;
+    case PLAY_VS_AI:
+        renderer.aiPlayRender(width, height, &gameState, gear_texture);
+        break;
     // case PLAY_LOCAL_PVP:
     //     // renderer.localPvPRender(pvp_program);
     //     break;
