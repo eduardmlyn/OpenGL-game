@@ -51,9 +51,11 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     geometries.push_back(make_shared<Sphere>());
     // You can use from_file function to load a Geometry from .obj file
     geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "bunny.obj")));
+    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "bugatti.obj")));
 
     sphere = geometries[0];
     bunny = geometries[1];
+    objTest = geometries[2];
 
     marble_texture = load_texture_2d(images_path / "bunny.jpg");
 
@@ -77,7 +79,11 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .ambient_color = glm::vec4(0.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
-
+    
+    objects_ubos.push_back({.model_matrix = glm::mat4(1.0f),
+                            .ambient_color = glm::vec4(0.0f),
+                            .diffuse_color = glm::vec4(1.0f),
+                            .specular_color = glm::vec4(0.0f)});
     // --------------------------------------------------------------------------
     // Create Buffers
     // --------------------------------------------------------------------------
@@ -118,22 +124,7 @@ void Application::update(float delta) {}
 
 void Application::render()
 {
-    // TODO Change rendering functions based on the game state
-    switch (gameState.currentState)
-    {
-    case GAME_MENU:
-        // renderer.menuRender(menu_program);
-        break;
-    case PLAY_VS_AI:
-        //     renderer.aiPlayRender(ai_program);
-        break;
-    case PLAY_LOCAL_PVP:
-        //     renderer.localPvPRender(pvp_program);
-        break;
-    case PLAY_MENU:
-        //     renderer.playMenuRender(play_program);
-        break;
-    }
+    
 
     // --------------------------------------------------------------------------
     // Update UBOs
@@ -179,6 +170,27 @@ void Application::render()
 
     glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
     glBindTextureUnit(3, marble_texture);
+
+    // TODO Change rendering functions based on the game state
+    switch (gameState.currentState)
+    {
+    case GAME_MENU:
+        // renderer.menuRender(menu_program);
+        break;
+    case PLAY_VS_AI:
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
+        glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
+        objTest->draw();
+        break;
+    case PLAY_LOCAL_PVP:
+        //     renderer.localPvPRender(pvp_program);
+        break;
+    case PLAY_MENU:
+        //     renderer.playMenuRender(play_program);
+        break;
+    }
     // bunny->draw();
 }
 
