@@ -51,7 +51,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     geometries.push_back(make_shared<Sphere>());
     // You can use from_file function to load a Geometry from .obj file
     geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "bunny.obj")));
-    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "bugatti.obj")));
+    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "tank.obj")));
 
     sphere = geometries[0];
     bunny = geometries[1];
@@ -80,7 +80,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .ambient_color = glm::vec4(0.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
-    
+
     objects_ubos.push_back({.model_matrix = glm::mat4(1.0f),
                             .ambient_color = glm::vec4(0.0f),
                             .diffuse_color = glm::vec4(1.0f),
@@ -125,7 +125,6 @@ void Application::update(float delta) {}
 
 void Application::render()
 {
-    
 
     // --------------------------------------------------------------------------
     // Update UBOs
@@ -164,8 +163,6 @@ void Application::render()
 
     glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
     // sphere->draw();
-
-    
 
     // TODO Change rendering functions based on the game state
     switch (gameState.currentState)

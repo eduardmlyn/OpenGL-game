@@ -18,7 +18,7 @@ private:
     ImGuiWindowFlags windowFlag = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
     // TODO: fix when scrolling main window and child window stays on same coordinates
     ImGuiWindowFlags childWindowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysVerticalScrollbar;
-    ImGuiWindowFlags playMenuFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration;
+    ImGuiWindowFlags playMenuFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoNavInputs;
     ImGuiStyle windowStyle;
     ImVec4 mapRGBAToVectorColor(int red, int green, int blue, float alpha);
     colors cHelper = colors::colors();
@@ -62,7 +62,7 @@ private:
                                 "Divine support (cooldown of 3):\n"
                                 "cost - 50 mana\n"
                                 "\theals target ally and gives him speed up, defense up, accuracy up.\n\n"
-                                "Viktor, the Steelwall (Tank)\n"
+                                "Viktor, the Steelwall(Tank)\n"
                                 "  Basic attack:\n"
                                 "\tdeals damage, gains 5 mana and defense up.\n"
                                 "--First special ability--\n"
@@ -73,7 +73,7 @@ private:
                                 "Charge forward (cooldown of 4):\n"
                                 "cost - 15 mana\n"
                                 "\tgain taunt, defense up, deal damage to target enemy, and inflict the enemy with defense down and accuracy down.\n\n"
-                                "Ryuji, the Shadowstrike\n"
+                                "Ryuji, the Shadowstrike(Assassin)\n"
                                 "  Basic attack:\n"
                                 "\tdeals damage, if the target is below 50%% health deals extra damage, gains 5 mana.\n"
                                 "--First special ability--\n"
