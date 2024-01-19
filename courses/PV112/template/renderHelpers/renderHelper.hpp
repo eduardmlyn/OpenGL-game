@@ -18,7 +18,8 @@ private:
     ImGuiWindowFlags windowFlag = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
     // TODO: fix when scrolling main window and child window stays on same coordinates
     ImGuiWindowFlags childWindowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysVerticalScrollbar;
-    ImGuiWindowFlags playMenuFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoNavInputs;
+    ImGuiWindowFlags toggleMenuFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoNavInputs;
+    ImGuiWindowFlags playMenuFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
     ImGuiStyle windowStyle;
     ImVec4 mapRGBAToVectorColor(int red, int green, int blue, float alpha);
     colors cHelper = colors::colors();
@@ -90,7 +91,7 @@ public:
     ~Renderer();
     void howToPlayRender(int width, int height, gameState *state);
     void aiPlayRender(int width, int height, gameState *state, GLuint gearTexture);
-    void playMenuRender(GLuint program);
+    void playMenuRender(int width, int height, gameState *state);
     void menuRender(int width, int height, gameState *state);
     void localPvPRender(GLuint program);
 };

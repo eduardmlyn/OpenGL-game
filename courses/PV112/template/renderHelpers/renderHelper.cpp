@@ -57,26 +57,33 @@ void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gear
     ImGuiStyle *style = &ImGui::GetStyle();
     ImGui::StyleColorsDark(style);
     colorS silver = cHelper.getColor(SILVER);
-    colorS lightBlack = cHelper.getColor(LIGHT_BLACK);
-    // style->Colors[ImGuiCol_WindowBg] = mapRGBAToVectorColor(silver.red, d_purple.green, d_purple.blue, 0.5f);
-    style->Colors[ImGuiCol_Button] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.5f);
-    style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 1.f);
-    // style->Colors[ImGuiCol_Text] = mapRGBAToVectorColor(gold.red, gold.green, gold.blue, 1.f);
-    style->WindowRounding = 0.5f;
-    // style->
-    // style->WindowBorderSize = 1.f;
-    // const float unit = ImGui::GetFontSize();
-    // float window_width = width - 4 * unit;
-    ImGui::Begin("Play Menu", nullptr, playMenuFlags);
-    if (ImGui::ImageButton((void *)(intptr_t)gearTexture, ImVec2(32, 32)))
+    // colorS lightBlack = cHelper.getColor(LIGHT_BLACK);
+    style->Colors[ImGuiCol_Button] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.01f);
+    style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.1f);
+    ImGui::Begin("Toggle Menu", nullptr, toggleMenuFlags);
+    if (ImGui::ImageButton((void *)(intptr_t)gearTexture, ImVec2(16, 16)))
     {
         state->PlayMenu();
     }
     ImGui::End();
 }
 
-void Renderer::playMenuRender(GLuint program)
+void Renderer::playMenuRender(int width, int height, gameState *state)
 {
+    ImGuiStyle *style = &ImGui::GetStyle();
+    ImGui::StyleColorsDark(style);
+    colorS silver = cHelper.getColor(SILVER);
+    colorS lightBlack = cHelper.getColor(LIGHT_BLACK);
+    style->Colors[ImGuiCol_WindowBg] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.1f);
+    style->Colors[ImGuiCol_Button] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.5f);
+    style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.8f);
+    style->Colors[ImGuiCol_Text] = mapRGBAToVectorColor(lightBlack.red, lightBlack.green, lightBlack.blue, 1.f);
+    style->WindowRounding = 5.f;
+    ImGui::Begin("Play Menu", nullptr, playMenuFlags);
+    if (ImGui::Button("Back", ImVec2(100, 50))) {
+        state->Back();
+    }
+    ImGui::End();
 }
 
 void Renderer::menuRender(int width, int height, gameState *state)
@@ -103,6 +110,7 @@ void Renderer::menuRender(int width, int height, gameState *state)
     ImGui::Text(gameName);
     ImGui::SetWindowFontScale(1.25f);
     // Create centered buttons
+    // TODO fix buttons width based on length of string 
     ImGui::SetCursorPos(ImVec2((window_width - 270) * 0.5f, (height - 200.f) / 5 * 2));
     if (ImGui::Button("Play vs AI", ImVec2(270, 50)))
     {

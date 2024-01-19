@@ -211,9 +211,9 @@ void Application::render_ui()
     case HOW_TO_PLAY:
         renderer.howToPlayRender(width, height, &gameState);
         break;
-        // case PLAY_MENU:
-        //     // renderer.playMenuRender(play_program);
-        //     break;
+    case PLAY_MENU:
+        renderer.playMenuRender(width, height, &gameState);
+        break;
     }
 }
 
