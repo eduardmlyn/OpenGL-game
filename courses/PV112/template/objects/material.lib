@@ -1,0 +1,144 @@
+# Aspose.3D Wavefront OBJ Exporter
+# Copyright 2004-2023 Aspose Pty Ltd.
+# File created: 01/20/2024 11:47:06
+
+newmtl Material.0008f1
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACRobeSh.tga
+newmtl Material
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACshorts.tga
+newmtl Material.1
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACRobePa.tga
+newmtl Material.00020b
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACswords.tga
+newmtl Material1
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACswords.tga
+newmtl Material125
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACboots.tga
+newmtl Material.00068b
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACRobeSh.tga
+newmtl Material.00041e
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACgloves.tga
+newmtl Material.0003e4
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACgloves.tga
+newmtl Material123
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd rai.tga
+newmtl Material12
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd AChood.tga
+newmtl Material124
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd ACRobeSh.tga
+newmtl Mat1
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 0.2 0.2 0.2
+	Ns 20
+	d 1
+	Tr 0
+	map_Kd rai.tga
+newmtl Mat
+	Ka 0.2 0.2 0.2
+	Kd 0.5 0.5 0.5
+	Ke 0 0 0
+	illum 2
+	Ks 1 1 1
+	Ns 0.84
+	d 1
+	Tr 0
+	map_Kd mata.tga

@@ -46,7 +46,6 @@ void Renderer::howToPlayRender(int width, int height, gameState *state)
     ImGui::SetCursorPos(ImVec2(4 * unit, 4 * unit));
     if (ImGui::Button("Back", ImVec2(70, 50)))
     {
-        state->PrintStateList();
         state->Back();
     }
     ImGui::End();
@@ -61,7 +60,7 @@ void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gear
     style->Colors[ImGuiCol_Button] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.01f);
     style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.1f);
     ImGui::Begin("Toggle Menu", nullptr, toggleMenuFlags);
-    if (ImGui::ImageButton((void *)(intptr_t)gearTexture, ImVec2(16, 16)))
+    if (ImGui::ImageButton((void *)(intptr_t)gearTexture, ImVec2(32, 32)))
     {
         state->PlayMenu();
     }
@@ -79,9 +78,29 @@ void Renderer::playMenuRender(int width, int height, gameState *state)
     style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.8f);
     style->Colors[ImGuiCol_Text] = mapRGBAToVectorColor(lightBlack.red, lightBlack.green, lightBlack.blue, 1.f);
     style->WindowRounding = 5.f;
+    const float unit = ImGui::GetFontSize();
+    float windowWidth = width - 2 * unit;
     ImGui::Begin("Play Menu", nullptr, playMenuFlags);
-    if (ImGui::Button("Back", ImVec2(100, 50))) {
+    std::cout << windowWidth;
+    ImGui::SetWindowSize(ImVec2((windowWidth - 200) / 2, height - 100.f));
+    ImGui::SetWindowPos(ImVec2((width - (windowWidth - 200) / 2) / 2, 50.f));
+    // TODO change the position?
+    ImGui::SetCursorPos(ImVec2((windowWidth - ImGui::CalcTextSize("Exit to Maine Menu").x) * 0.5f, (height - 100.f) / 3));
+    if (ImGui::Button("Back", ImVec2(200, 50)))
+    {
         state->Back();
+    }
+    // TODO change these?
+    ImGui::SetCursorPosY((height - 100.f) / 3 * 2);
+    if (ImGui::Button("Exit to Main Menu", ImVec2(200, 50)))
+    {
+        // TODO change the GameMenu function
+        state->GameMenu();
+    }
+    ImGui::SetCursorPosY(height - 100.f);
+    if (ImGui::Button("Exit game", ImVec2(200, 50)))
+    {
+        state->Exit();
     }
     ImGui::End();
 }
@@ -110,7 +129,7 @@ void Renderer::menuRender(int width, int height, gameState *state)
     ImGui::Text(gameName);
     ImGui::SetWindowFontScale(1.25f);
     // Create centered buttons
-    // TODO fix buttons width based on length of string 
+    // TODO fix buttons width based on length of string
     ImGui::SetCursorPos(ImVec2((window_width - 270) * 0.5f, (height - 200.f) / 5 * 2));
     if (ImGui::Button("Play vs AI", ImVec2(270, 50)))
     {

@@ -51,7 +51,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     geometries.push_back(make_shared<Sphere>());
     // You can use from_file function to load a Geometry from .obj file
     geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "bunny.obj")));
-    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "tank.obj")));
+    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "altair.obj")));
 
     sphere = geometries[0];
     bunny = geometries[1];
