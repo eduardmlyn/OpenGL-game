@@ -55,10 +55,10 @@ void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gear
 {
     ImGuiStyle *style = &ImGui::GetStyle();
     ImGui::StyleColorsDark(style);
-    colorS silver = cHelper.getColor(SILVER);
+    colorS silver = cHelper.getColor(LIGHT_SILVER);
     // colorS lightBlack = cHelper.getColor(LIGHT_BLACK);
-    style->Colors[ImGuiCol_Button] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.01f);
-    style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.1f);
+    style->Colors[ImGuiCol_Button] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.3f);
+    style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.5f);
     ImGui::Begin("Toggle Menu", nullptr, toggleMenuFlags);
     if (ImGui::ImageButton((void *)(intptr_t)gearTexture, ImVec2(32, 32)))
     {

@@ -132,6 +132,12 @@ public:
     void delete_shaders() override;
 
     /** @copydoc PV112Application::update */
+    /**
+     * This method is invoked from within the infinite OpenGL loop. The purpose of this method is to update the
+     * application specific data before rendering the content.
+     *
+     * @param 	delta	The elapsed time between this and the previous frame (in milliseconds).
+     */
     void update(float delta) override;
 
     /** @copydoc PV112Application::render */

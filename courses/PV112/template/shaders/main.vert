@@ -34,5 +34,5 @@ void main()
 	fs_normal = transpose(inverse(mat3(object.model_matrix))) * normal;
 	fs_texture_coordinate = texture_coordinate;
 
-    gl_Position = camera.projection * camera.view * object.model_matrix * vec4(position, 1.0);
+  gl_Position = camera.projection * camera.view * object.model_matrix * vec4(position, 1.0);
 }

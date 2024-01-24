@@ -81,10 +81,10 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
 
-    objects_ubos.push_back({.model_matrix = glm::mat4(1.0f),
-                            .ambient_color = glm::vec4(0.0f),
+    objects_ubos.push_back({.model_matrix = glm::mat4(0.5f),
+                            .ambient_color = glm::vec4(1.0f),
                             .diffuse_color = glm::vec4(1.0f),
-                            .specular_color = glm::vec4(0.0f)});
+                            .specular_color = glm::vec4(1.0f)});
     // --------------------------------------------------------------------------
     // Create Buffers
     // --------------------------------------------------------------------------
@@ -162,7 +162,6 @@ void Application::render()
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 0 * 256, sizeof(ObjectUBO));
 
     glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
-    // sphere->draw();
 
     // TODO Change rendering functions based on the game state
     switch (gameState.currentState)
@@ -177,13 +176,14 @@ void Application::render()
         // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
         // glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
         // objTest->draw();
-        glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
-        glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
-        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
+        // glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
+        // glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
+        // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
 
-        glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
-        glBindTextureUnit(3, marble_texture);
-        bunny->draw();
+        // glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
+        // glBindTextureUnit(3, marble_texture); 
+        // bunny->draw();
+        objTest->draw();
         break;
     case PLAY_LOCAL_PVP:
         //     renderer.localPvPRender(pvp_program);
