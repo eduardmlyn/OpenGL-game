@@ -10,6 +10,7 @@ enum colorE
     GOLD,
     DEEP_PURPLE,
     SILVER,
+    LIGHT_SILVER,
     LIGHT_BLACK
 };
 
@@ -29,6 +30,8 @@ public:
             return colorS(54, 1, 63);
         case SILVER:
             return colorS(195, 195, 195);
+        case LIGHT_SILVER:
+            return colorS(238, 238, 238);
         case LIGHT_BLACK:
             return colorS(45, 45, 45);
         default:
