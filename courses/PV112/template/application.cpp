@@ -51,7 +51,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     geometries.push_back(make_shared<Sphere>());
     // You can use from_file function to load a Geometry from .obj file
     geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "bunny.obj")));
-    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "altair.obj")));
+    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "tank.obj")));
 
     sphere = geometries[0];
     bunny = geometries[1];
@@ -81,7 +81,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
 
-    objects_ubos.push_back({.model_matrix = glm::mat4(0.5f),
+    objects_ubos.push_back({.model_matrix = glm::mat4(1.0f),
                             .ambient_color = glm::vec4(1.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(1.0f)});
@@ -176,12 +176,12 @@ void Application::render()
         // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
         // glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
         // objTest->draw();
-        // glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
-        // glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
-        // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
 
-        // glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
-        // glBindTextureUnit(3, marble_texture); 
+        glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
+        // glBindTextureUnit(3, marble_texture);
         // bunny->draw();
         objTest->draw();
         break;
@@ -230,7 +230,10 @@ void Application::on_resize(int width, int height)
 void Application::on_mouse_move(double x, double y)
 {
     // std::cout << x << " - x position" << std::endl;
+    // if (x <) {
+    // glm::vec3 pos = camera.get_eye_position();
     camera.on_mouse_move(x, y);
+    // }
 }
 void Application::on_mouse_button(int button, int action, int mods)
 {
