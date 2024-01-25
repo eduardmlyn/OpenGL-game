@@ -62,7 +62,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     objTest = geometries[1];
 
     // marble_texture = load_texture_2d(images_path / "bunny.jpg");
-    healer_texture = load_texture_2d(images_path / "healer.jpg");
+    healer_texture = load_texture_2d(images_path / "healer.jpg"); // TODO try to use the mtl file for healer, should actually change the color and apply the texture correctly
     gear_texture = load_texture_2d(images_path / "gear.png");
 
     // --------------------------------------------------------------------------
@@ -87,9 +87,9 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     //                         .specular_color = glm::vec4(0.0f)});
 
     objects_ubos.push_back({.model_matrix = glm::mat4(1.0f),
-                            .ambient_color = glm::vec4(0.0f),
-                            .diffuse_color = glm::vec4(1.0f),
-                            .specular_color = glm::vec4(0.0f)});
+                            .ambient_color = glm::vec4(0.8f, 0.8f, 0.8f, 1.f),
+                            .diffuse_color = glm::vec4(0.8f, 0.8f, 0.8f, 1.f),
+                            .specular_color = glm::vec4(0.35f, 0.35f, 0.35f, 1.f)});
     // --------------------------------------------------------------------------
     // Create Buffers
     // --------------------------------------------------------------------------
@@ -187,9 +187,9 @@ void Application::render()
 
         glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
         glBindTextureUnit(3, healer_texture);
-        GLint textureWidth;
-        glGetTextureLevelParameteriv(healer_texture, 0, GL_TEXTURE_WIDTH, &textureWidth);
-        std::cout << textureWidth << ", " << healer_texture << std::endl;
+        // GLint textureWidth;
+        // glGetTextureLevelParameteriv(healer_texture, 0, GL_TEXTURE_WIDTH, &textureWidth);
+        // std::cout << textureWidth << ", " << healer_texture << std::endl;
         // bunny->draw();
         objTest->draw();
         break;

@@ -26,7 +26,7 @@ object;
 
 layout(location = 3) uniform bool has_texture = false;
 
-layout(binding = 3) uniform sampler2D albedo_texture;
+layout(binding = 3) uniform sampler2D healer_texture;
 
 layout(location = 0) in vec3 fs_position;
 layout(location = 1) in vec3 fs_normal;
@@ -45,7 +45,7 @@ void main() {
     float NdotH = max(dot(N, H), 0.0001);
 
     vec3 ambient = object.ambient_color.rgb * light.ambient_color.rgb;
-    vec3 diffuse = object.diffuse_color.rgb * (has_texture ? texture(albedo_texture, fs_texture_coordinate).rgb : vec3(1.0)) *
+    vec3 diffuse = object.diffuse_color.rgb * (has_texture ? texture(healer_texture, fs_texture_coordinate).rgb : vec3(1.0)) *
                    light.diffuse_color.rgb;
     vec3 specular = object.specular_color.rgb * light.specular_color.rgb;
 

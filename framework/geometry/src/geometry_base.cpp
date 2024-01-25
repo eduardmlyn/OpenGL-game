@@ -307,7 +307,7 @@ Geometry Geometry::from_file(std::filesystem::path path)
 
         const int elements_per_vertex = 3 + (!normals.empty() ? 3 : 0) + (!tex_coords.empty() ? 2 : 0);
 
-        return Geometry{GL_TRIANGLES, positions, {/*indices*/}, normals, colors, tex_coords};
+        return Geometry{GL_TRIANGLES, positions, {/*indices*/}, normals, {/*colors*/}, tex_coords};
     }
     std::cerr << "Extension " << extension << " not supported" << std::endl;
 
