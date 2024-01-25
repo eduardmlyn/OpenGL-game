@@ -222,6 +222,7 @@ Geometry Geometry::from_file(std::filesystem::path path)
         std::vector<float> positions;
         std::vector<float> normals;
         std::vector<float> tex_coords;
+        std::vector<float> colors;
 
         glm::vec3 min{std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
         glm::vec3 max{std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min()};
@@ -230,6 +231,10 @@ Geometry Geometry::from_file(std::filesystem::path path)
         size_t index_offset = 0;
         for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++)
         {
+            int material_id = shape.mesh.material_ids[f];
+
+            const tinyobj::material_t &material = materials[material_id];
+
             // Loop over vertices in the face.
             for (size_t v = 0; v < 3; v++)
             {
@@ -276,6 +281,8 @@ Geometry Geometry::from_file(std::filesystem::path path)
                 max.y = std::max(max.y, vy);
                 max.z = std::max(max.z, vz);
 
+                // std::cout << material.diffuse[0] << ", " << material.diffuse[1] << ", " << material.diffuse[2] << "\n";
+                colors.insert(colors.end(), {material.diffuse[0], material.diffuse[1], material.diffuse[2]});
                 positions.insert(positions.end(), {vx, vy, vz});
                 normals.insert(normals.end(), {nx, ny, nz});
                 tex_coords.insert(tex_coords.end(), {tx, ty});
@@ -300,7 +307,7 @@ Geometry Geometry::from_file(std::filesystem::path path)
 
         const int elements_per_vertex = 3 + (!normals.empty() ? 3 : 0) + (!tex_coords.empty() ? 2 : 0);
 
-        return Geometry{GL_TRIANGLES, positions, {/*indices*/}, normals, {/*colors*/}, tex_coords};
+        return Geometry{GL_TRIANGLES, positions, {/*indices*/}, normals, colors, tex_coords};
     }
     std::cerr << "Extension " << extension << " not supported" << std::endl;
 

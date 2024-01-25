@@ -11,10 +11,14 @@ using std::make_shared;
 GLuint load_texture_2d(const std::filesystem::path filename)
 {
     int width, height, channels;
+    // stbi_info(filename.generic_string().data(), &width, &height, &channels);
+    // std::cout << width << ", " << height << ", " << (GLsizei)std::log2(width) << "\n";
+
     unsigned char *data = stbi_load(filename.generic_string().data(), &width, &height, &channels, 4);
 
     GLuint texture;
     glCreateTextures(GL_TEXTURE_2D, 1, &texture);
+    // std::cout << width << ", " << height << ", " << (GLsizei)std::log2(width) << "\n";
 
     glTextureStorage2D(texture, (GLsizei)std::log2(width), GL_RGBA8, width, height);
 
@@ -50,14 +54,15 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     // --------------------------------------------------------------------------
     geometries.push_back(make_shared<Sphere>());
     // You can use from_file function to load a Geometry from .obj file
-    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "bunny.obj")));
-    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "tank.obj")));
+    // geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "bunny.obj")));
+    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "healer.obj")));
 
     sphere = geometries[0];
-    bunny = geometries[1];
-    objTest = geometries[2];
+    // bunny = geometries[1];
+    objTest = geometries[1];
 
-    marble_texture = load_texture_2d(images_path / "bunny.jpg");
+    // marble_texture = load_texture_2d(images_path / "bunny.jpg");
+    healer_texture = load_texture_2d(images_path / "healer.jpg");
     gear_texture = load_texture_2d(images_path / "gear.png");
 
     // --------------------------------------------------------------------------
@@ -76,15 +81,15 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .ambient_color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f),
                             .diffuse_color = glm::vec4(0.0),
                             .specular_color = glm::vec4(0.0f)});
+    // objects_ubos.push_back({.model_matrix = glm::mat4(1.0f),
+    //                         .ambient_color = glm::vec4(0.0f),
+    //                         .diffuse_color = glm::vec4(1.0f),
+    //                         .specular_color = glm::vec4(0.0f)});
+
     objects_ubos.push_back({.model_matrix = glm::mat4(1.0f),
                             .ambient_color = glm::vec4(0.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
-
-    objects_ubos.push_back({.model_matrix = glm::mat4(1.0f),
-                            .ambient_color = glm::vec4(1.0f),
-                            .diffuse_color = glm::vec4(1.0f),
-                            .specular_color = glm::vec4(1.0f)});
     // --------------------------------------------------------------------------
     // Create Buffers
     // --------------------------------------------------------------------------
@@ -157,11 +162,11 @@ void Application::render()
     // Draw objects
     glUseProgram(main_program);
 
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
-    glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
-    glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 0 * 256, sizeof(ObjectUBO));
+    // glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
+    // glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
+    // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 0 * 256, sizeof(ObjectUBO));
 
-    glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
+    // glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
 
     // TODO Change rendering functions based on the game state
     switch (gameState.currentState)
@@ -181,7 +186,10 @@ void Application::render()
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
 
         glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
-        // glBindTextureUnit(3, marble_texture);
+        glBindTextureUnit(3, healer_texture);
+        GLint textureWidth;
+        glGetTextureLevelParameteriv(healer_texture, 0, GL_TEXTURE_WIDTH, &textureWidth);
+        std::cout << textureWidth << ", " << healer_texture << std::endl;
         // bunny->draw();
         objTest->draw();
         break;

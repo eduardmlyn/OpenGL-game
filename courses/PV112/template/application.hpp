@@ -75,6 +75,7 @@ class Application : public PV112Application
     std::shared_ptr<Geometry> sphere;
     std::shared_ptr<Geometry> bunny;
     std::shared_ptr<Geometry> objTest;
+    std::shared_ptr<Geometry> healer;
 
     // Default camera that rotates around center.
     Camera camera;
@@ -96,6 +97,7 @@ class Application : public PV112Application
     // Textures
     GLuint marble_texture = 0;
     GLuint gear_texture = 0;
+    GLuint healer_texture = 0;
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();
