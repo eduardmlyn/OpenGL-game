@@ -74,8 +74,8 @@ class Application : public PV112Application
     // 3. We don't have to deallocate these geometries
     std::shared_ptr<Geometry> sphere;
     std::shared_ptr<Geometry> bunny;
-    std::shared_ptr<Geometry> objTest;
-    std::shared_ptr<Geometry> healer;
+    std::shared_ptr<Geometry> userChar;
+    std::shared_ptr<Geometry> enemyChar;
 
     // Default camera that rotates around center.
     Camera camera;
