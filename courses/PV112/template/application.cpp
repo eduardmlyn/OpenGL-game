@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <iostream>
+#include "glm/ext.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -73,6 +74,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     camera_ubo.projection = glm::perspective(glm::radians(45.0f), float(width) / float(height), 0.01f, 500.0f);
     camera_ubo.view = glm::lookAt(camera.get_eye_position(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 
+    // std::cout << glm::to_string(camera_ubo.view);
     light_ubo.position = glm::vec4(0.0f, 3.0f, 2.0f, 1.0f);
     light_ubo.ambient_color = glm::vec4(1.0f);
     light_ubo.diffuse_color = glm::vec4(2.0f, 2.0f, 1.0f, 1.0f);
@@ -83,20 +85,28 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .diffuse_color = glm::vec4(0.0),
                             .specular_color = glm::vec4(0.0f)});
     // User character(closer to screen, rotated)
-    objects_ubos.push_back({.model_matrix =
-                                glm::translate(
-                                    glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)),
-                                                glm::radians(135.f),
-                                                glm::vec3(0.f, 1.f, 0.f)),
-                                    glm::vec3(4.f, 0.f, -2.f)),
+    glm::vec3 userCharPos = glm::vec3(-1.f, 0.f, 7.5f);
+    glm::vec3 enemyCharPos = glm::vec3(1.f, 0.f, 1.5f);
+    glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), userCharPos);
+    glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos - enemyCharPos), glm::vec3(0.f, 1.f, 0.f))); // glm::rotate(glm::mat4(1.f), glm::radians(155.f), glm::vec3(0.f, 1.f, 0.f));
+    glm::mat4 charScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
+    glm::mat4 charMatrix = charTranslation * charRotation * charScale;
+    std::cout << glm::to_string(charMatrix) << std::endl;
+    objects_ubos.push_back({.model_matrix = charMatrix,
                             .ambient_color = glm::vec4(0.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
-    // User character(closer to screen, rotated)
-    objects_ubos.push_back({.model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(5.f, 0.f, 0.f)),
-                            .ambient_color = glm::vec4(1.f),
+    // Enemy character(closer to screen, rotated)
+
+    charTranslation = glm::translate(glm::mat4(1.f), enemyCharPos);
+    charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(enemyCharPos - userCharPos), glm::vec3(0.f, 1.f, 0.f))); // glm::rotate(glm::mat4(1.f), glm::radians(-40.f), glm::vec3(0.f, 1.f, 0.f));
+    charScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
+    charMatrix = charTranslation * charRotation * charScale;
+    std::cout << glm::to_string(charMatrix) << std::endl;
+    objects_ubos.push_back({.model_matrix = charMatrix,
+                            .ambient_color = glm::vec4(0.f),
                             .diffuse_color = glm::vec4(1.f),
-                            .specular_color = glm::vec4(1.f)});
+                            .specular_color = glm::vec4(0.f)});
 
     // --------------------------------------------------------------------------
     // Create Buffers
@@ -174,6 +184,7 @@ void Application::render()
     switch (gameState.currentState)
     {
     case GAME_MENU:
+        camera.set_eye_position(0.f, glm::radians(5.f), 10.f);
         // renderer.menuRender(menu_program);
         break;
     case PLAY_MENU: // TODO think about the pvp play similarly to ai play, maybe have it fall down in rendering as well
