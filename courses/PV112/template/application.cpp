@@ -86,7 +86,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .specular_color = glm::vec4(0.0f)});
     // User character(closer to screen, rotated)
     glm::vec3 userCharPos = glm::vec3(-1.f, 0.f, 7.5f);
-    glm::vec3 enemyCharPos = glm::vec3(1.f, 0.f, 1.5f);
+    glm::vec3 enemyCharPos = glm::vec3(2.f, 0.f, 2.5f);
     glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), userCharPos);
     glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos - enemyCharPos), glm::vec3(0.f, 1.f, 0.f))); // glm::rotate(glm::mat4(1.f), glm::radians(155.f), glm::vec3(0.f, 1.f, 0.f));
     glm::mat4 charScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
@@ -109,6 +109,17 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .specular_color = glm::vec4(0.f)});
 
     // --------------------------------------------------------------------------
+    // Cone lights above characters
+    // --------------------------------------------------------------------------
+    userCharLight.lightUbo.position = glm::vec4(userCharPos.x, 1.5f, userCharPos.z, 1.f);
+    userCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 1.f);
+    userCharLight.angle = cosf(glm::radians(45.f));
+    userCharLight.lightUbo.ambient_color = glm::vec4(1.0f);
+    userCharLight.lightUbo.diffuse_color = glm::vec4(1.0f);
+    userCharLight.lightUbo.specular_color = glm::vec4(1.0f);
+
+    coneLights.push_back(userCharLight);
+    // --------------------------------------------------------------------------
     // Create Buffers
     // --------------------------------------------------------------------------
     glCreateBuffers(1, &camera_buffer);
@@ -120,6 +131,8 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     glCreateBuffers(1, &objects_buffer);
     glNamedBufferStorage(objects_buffer, sizeof(ObjectUBO) * objects_ubos.size(), objects_ubos.data(), GL_DYNAMIC_STORAGE_BIT);
 
+    glCreateBuffers(1, &lights_buffer);
+    glNamedBufferStorage(lights_buffer, sizeof(ConeLightUBO) * coneLights.size(), coneLights.data(), GL_DYNAMIC_STORAGE_BIT);
     compile_shaders();
 }
 
@@ -130,18 +143,34 @@ Application::~Application()
     glDeleteBuffers(1, &camera_buffer);
     glDeleteBuffers(1, &light_buffer);
     glDeleteBuffers(1, &objects_buffer);
+    glDeleteBuffers(1, &lights_buffer);
 }
 
 // ----------------------------------------------------------------------------
 // Methods
 // ----------------------------------------------------------------------------
 
-void Application::delete_shaders() {}
+void Application::delete_shaders()
+{
+    GLint param = 0;
+    glGetProgramiv(main_program, GL_LINK_STATUS, &param);
+    if (param == GL_TRUE)
+    {
+        glDeleteProgram(main_program);
+    }
+    glGetProgramiv(lights_program, GL_LINK_STATUS, &param);
+    if (param == GL_TRUE)
+    {
+        glDeleteProgram(lights_program);
+    }
+}
 
 void Application::compile_shaders()
 {
     delete_shaders();
     main_program = create_program(lecture_shaders_path / "main.vert", lecture_shaders_path / "main.frag");
+    lights_program = create_program(lecture_shaders_path / "lights.vert", lecture_shaders_path / "lights.frag");
+    std::cout << "Shaders are reloaded." << std::endl;
 }
 
 void Application::update(float delta) {}
@@ -178,7 +207,8 @@ void Application::render()
     glCullFace(GL_BACK);
 
     // Draw objects
-    glUseProgram(main_program);
+    // glUseProgram(main_program);
+    GLint param = 0;
 
     // TODO Change rendering functions based on the game state
     switch (gameState.currentState)
@@ -189,17 +219,28 @@ void Application::render()
         break;
     case PLAY_MENU: // TODO think about the pvp play similarly to ai play, maybe have it fall down in rendering as well
     case PLAY_VS_AI:
-        // glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
-        // glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
-        // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
-        // glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
-        // objTest->draw();
+        glUseProgram(main_program);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
         glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
 
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 0 * 256, sizeof(ObjectUBO));
 
         sphere->draw();
+
+        glGetProgramiv(lights_program, GL_LINK_STATUS, &param);
+        std::cout << param << std::endl;
+        // glUseProgram(lights_program);
+        // glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, lights_buffer);
+
+        sphere->draw_instanced(1);
+        // sphere->bind_vao();
+        // glDrawElementsInstanced(sphere->mode, sphere->draw_elements_count, GL_UNSIGNED_INT, nullptr, coneLights.size());
+        // glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
+        // glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
+        // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
+        // glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
+        // objTest->draw();
+        glUseProgram(main_program);
 
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
 

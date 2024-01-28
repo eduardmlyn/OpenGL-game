@@ -34,6 +34,14 @@ struct LightUBO
     glm::vec4 specular_color;
 };
 
+struct ConeLightUBO
+{
+    LightUBO lightUbo;
+    glm::vec4 direction;
+    float angle;
+    float attenuation;
+};
+
 struct alignas(256) ObjectUBO
 {
     glm::mat4 model_matrix;  // [  0 -  64) bytes
@@ -59,11 +67,7 @@ class Application : public PV112Application
 
     // Programs
     GLuint main_program;
-    GLuint menu_program;
-    GLuint ai_program;
-    GLuint pvp_program; // TODO maybe same like ai_program
-    GLuint how_to_play_program;
-    GLuint play_program;
+    GLuint lights_program;
 
     // List of geometries used in the project
     std::vector<std::shared_ptr<Geometry>> geometries;
@@ -91,8 +95,10 @@ class Application : public PV112Application
     std::vector<ObjectUBO> objects_ubos;
 
     // Lights
-    std::vector<LightUBO> lights;
+    std::vector<ConeLightUBO> coneLights;
     GLuint lights_buffer = 0;
+    ConeLightUBO userCharLight;
+    ConeLightUBO enemyCharLight;
 
     // Textures
     GLuint marble_texture = 0;
