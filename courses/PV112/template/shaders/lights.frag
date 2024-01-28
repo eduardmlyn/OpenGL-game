@@ -18,7 +18,7 @@ struct ConeLight {
     vec4 direction;
     float angle;
     float attenuation;
-}
+};
 
 // The buffer with data about all lights.
 layout(binding = 4, std430) buffer ConeLights {
@@ -30,6 +30,7 @@ layout(binding = 4, std430) buffer ConeLights {
 layout(location = 0) in vec3 fs_position;
 layout(location = 1) in vec3 fs_color;
 layout(location = 2) in vec3 fs_light_direction;
+layout(location = 3) in flat int instanceID;
 
 // ----------------------------------------------------------------------------
 // Output Variables
@@ -46,7 +47,7 @@ void main()
     vec3 light_direction = normalize(fs_light_direction);
     vec3 vertex_to_light = normalize(fs_position - camera.position);
     float angle_cosine = dot(-light_direction, vertex_to_light);
-    float cone_factor = smoothstep(lights[gl_InstanceID].angle, lights[gl_InstanceID].angle + 0.1, angle_cosine)
+    float cone_factor = smoothstep(lights[instanceID].angle, lights[instanceID].angle + 0.1, angle_cosine);
 
     vec3 diffuse_color = fs_color * cone_factor;
 

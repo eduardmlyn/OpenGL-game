@@ -227,10 +227,10 @@ void Application::render()
 
         sphere->draw();
 
-        glGetProgramiv(lights_program, GL_LINK_STATUS, &param);
-        std::cout << param << std::endl;
-        // glUseProgram(lights_program);
-        // glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, lights_buffer);
+        // glGetProgramiv(lights_program, GL_LINK_STATUS, &param);
+        // std::cout << param << std::endl;
+        glUseProgram(lights_program);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, lights_buffer);
 
         sphere->draw_instanced(1);
         // sphere->bind_vao();

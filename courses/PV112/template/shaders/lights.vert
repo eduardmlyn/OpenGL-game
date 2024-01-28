@@ -22,7 +22,7 @@ struct ConeLight {
     vec4 direction;
     float angle;
     float attenuation;
-}
+};
 
 // The buffer with data about all lights.
 layout(binding = 4, std430) buffer ConeLights {
@@ -39,6 +39,7 @@ layout(location = 0) in vec3 position;
 layout(location = 0) out vec3 fs_position;
 layout(location = 1) out vec3 fs_color;
 layout(location = 2) out vec3 fs_light_direction;
+layout(location = 3) out flat int instanceID;
 
 // ----------------------------------------------------------------------------
 // Main Method
@@ -52,5 +53,6 @@ void main()
 
     vec4 light_direction_view = camera.view * lights[gl_InstanceID].direction;
     fs_light_direction = light_direction_view.xyz;
+    instanceID = gl_InstanceID;
     gl_Position = camera.projection * camera.view * vec4(fs_position, 1.0);
 }
