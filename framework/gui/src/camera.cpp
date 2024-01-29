@@ -14,7 +14,7 @@
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
-const float Camera::min_elevation = -1.5f;
+const float Camera::min_elevation = 0.f;
 const float Camera::max_elevation = 1.5f;
 const float Camera::min_distance = 1.0f;
 const float Camera::angle_sensitivity = 0.008f;
@@ -24,7 +24,7 @@ const float Camera::zoom_sensitivity = 0.003f;
 // Constructors
 // ----------------------------------------------------------------------------
 Camera::Camera(bool switch_axes)
-    : angle_direction(0.0f), angle_elevation(glm::radians(5.f)), distance(10.0f), last_x(0), last_y(0), is_rotating(false), is_zooming(false),
+    : angle_direction(0.0f), angle_elevation(0), distance(10.0f), last_x(0), last_y(0), is_rotating(false), is_zooming(false),
       switch_axes(switch_axes)
 {
     update_eye_pos();
@@ -62,7 +62,7 @@ void Camera::on_mouse_move(double x, double y)
     if (is_rotating)
     {
         angle_direction += dx * angle_sensitivity;
-        // angle_elevation += dy * angle_sensitivity;
+        angle_elevation += dy * angle_sensitivity;
 
         // Clamps the results.
         angle_elevation = glm::clamp(angle_elevation, min_elevation, max_elevation);
@@ -98,7 +98,7 @@ void Camera::on_mouse_button(int button, int action, int mods)
     {
         if (action == GLFW_PRESS)
         {
-            is_zooming = false;
+            is_zooming = true;
         }
         else
         {

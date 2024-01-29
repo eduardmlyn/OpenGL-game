@@ -46,9 +46,9 @@ layout(location = 3) out flat int instanceID;
 // ----------------------------------------------------------------------------
 void main()
 {
-	vec3 light_position = lights[gl_InstanceID].light.position.xyz;
+	fs_position = vec3(lights[gl_InstanceID].light.position + vec4(position, 1.0));
 
-	fs_position = position * 0.5 + light_position;
+	// fs_position = position * 0.5 + light_position;
 	fs_color = lights[gl_InstanceID].light.diffuse_color.rgb;
 
     vec4 light_direction_view = camera.view * lights[gl_InstanceID].direction;

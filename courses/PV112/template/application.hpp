@@ -36,7 +36,10 @@ struct LightUBO
 
 struct ConeLightUBO
 {
-    LightUBO lightUbo;
+    glm::vec4 position;
+    glm::vec4 ambient_color;
+    glm::vec4 diffuse_color;
+    glm::vec4 specular_color;
     glm::vec4 direction;
     float angle;
     float attenuation;
@@ -68,6 +71,7 @@ class Application : public PV112Application
     // Programs
     GLuint main_program;
     GLuint lights_program;
+    bool initedPrograms = false;
 
     // List of geometries used in the project
     std::vector<std::shared_ptr<Geometry>> geometries;
@@ -80,6 +84,7 @@ class Application : public PV112Application
     std::shared_ptr<Geometry> bunny;
     std::shared_ptr<Geometry> userChar;
     std::shared_ptr<Geometry> enemyChar;
+    std::shared_ptr<Geometry> ground;
 
     // Default camera that rotates around center.
     Camera camera;
@@ -103,7 +108,7 @@ class Application : public PV112Application
     // Textures
     GLuint marble_texture = 0;
     GLuint gear_texture = 0;
-    GLuint healer_texture = 0;
+    GLuint ground_texture = 0;
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();
