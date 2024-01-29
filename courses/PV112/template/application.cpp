@@ -260,6 +260,9 @@ void Application::render()
         enemyChar->draw();
 
         glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
+        glBindTextureUnit(3, ground_texture);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 4 * 256, sizeof(ObjectUBO));
+        ground->draw();
         // glUseProgram(lights_program);
 
         // sphere->draw_instanced(2);
