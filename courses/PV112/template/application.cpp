@@ -110,8 +110,9 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .specular_color = glm::vec4(0.f)});
 
     // Ground
-    // glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3)
-    objects_ubos.push_back({.model_matrix = glm::mat4(1.f),
+    glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -1.f, 0.f));
+    glm::mat4 groundScale = glm::scale(glm::mat4(1.0f), glm::vec3(550.f));
+    objects_ubos.push_back({.model_matrix = groundTranslation * groundScale,
                             .ambient_color = glm::vec4(0.f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.f)});

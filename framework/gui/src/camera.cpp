@@ -14,7 +14,7 @@
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
-const float Camera::min_elevation = 0.f;
+const float Camera::min_elevation = -1.f;
 const float Camera::max_elevation = 1.5f;
 const float Camera::min_distance = 1.0f;
 const float Camera::angle_sensitivity = 0.008f;
