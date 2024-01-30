@@ -86,6 +86,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .specular_color = glm::vec4(1.0f)});
     // User character(closer to screen, rotated)
     glm::vec4 userCharPos = glm::vec4(-1.f, 0.f, 7.5f, 1.f);
+    // glm::vec4 enemyCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec4 enemyCharPos = glm::vec4(2.f, 0.f, 2.5f, 1.f);
 
     glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), glm::vec3(userCharPos));
@@ -105,15 +106,15 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     glm::mat4 enemyCharMatrix = enemyCharTranslation * enemyCharRotation * enemyCharScale;
     std::cout << glm::to_string(enemyCharMatrix) << std::endl;
     objects_ubos.push_back({.model_matrix = enemyCharMatrix,
-                            .ambient_color = glm::vec4(0.f),
+                            .ambient_color = glm::vec4(1.f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.f)});
 
     // Ground
-    glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -1.f, 0.f));
-    glm::mat4 groundScale = glm::scale(glm::mat4(1.0f), glm::vec3(550.f));
+    glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -0.8f, 0.f));
+    glm::mat4 groundScale = glm::scale(glm::mat4(1.0f), glm::vec3(300.f));
     objects_ubos.push_back({.model_matrix = groundTranslation * groundScale,
-                            .ambient_color = glm::vec4(0.f),
+                            .ambient_color = glm::vec4(1.f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.f)});
 
@@ -123,18 +124,18 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     userCharLight.position = userCharPos + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
     userCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);             // look down the y axis
     userCharLight.angle = cosf(glm::radians(45.f));
-    userCharLight.ambient_color = glm::vec4(1.0f);
+    userCharLight.ambient_color = glm::vec4(0.0f);
     userCharLight.diffuse_color = glm::vec4(1.0f);
-    userCharLight.specular_color = glm::vec4(1.0f);
+    userCharLight.specular_color = glm::vec4(0.0f);
 
     coneLights.push_back(userCharLight);
 
     enemyCharLight.position = enemyCharPos + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
     enemyCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);              // look down the y axis
     enemyCharLight.angle = cosf(glm::radians(45.f));
-    enemyCharLight.ambient_color = glm::vec4(1.0f);
+    enemyCharLight.ambient_color = glm::vec4(0.0f);
     enemyCharLight.diffuse_color = glm::vec4(1.0f);
-    enemyCharLight.specular_color = glm::vec4(1.0f);
+    enemyCharLight.specular_color = glm::vec4(0.0f);
 
     coneLights.push_back(enemyCharLight);
 
@@ -243,19 +244,12 @@ void Application::render()
         glUseProgram(main_program);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
         glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
-        // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 0 * 256, sizeof(ObjectUBO));
         glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 0 * 256, sizeof(ConeLightUBO));
-
-        // sphere->draw();
-        // glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 1 * 256, sizeof(ObjectUBO));
-        // sphere->draw();
-
-        // glUseProgram(main_program);
 
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
         userChar->draw();
 
-        glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 0 * 256, sizeof(ConeLightUBO));
+        glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 1 * 256, sizeof(ConeLightUBO));
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 3 * 256, sizeof(ObjectUBO));
 
         enemyChar->draw();
@@ -264,9 +258,6 @@ void Application::render()
         glBindTextureUnit(3, ground_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 4 * 256, sizeof(ObjectUBO));
         ground->draw();
-        // glUseProgram(lights_program);
-
-        // sphere->draw_instanced(2);
         break;
     }
 }

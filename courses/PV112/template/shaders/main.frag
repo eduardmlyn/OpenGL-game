@@ -100,7 +100,6 @@ void main() {
     ConeLightS coneLightS = ConeLightS(coneLight.position, coneLight.ambient_color, coneLight.diffuse_color, coneLight.specular_color, coneLight.direction, coneLight.angle, coneLight.attenuation);
     vec3 coneColor = CalcConeLight(coneLightS);
     color += coneColor;
-    // vec3 color = vec3(0.0);
     if (light.position.w == 1.0) {
         color /= (dot(light_vector, light_vector));
     }
