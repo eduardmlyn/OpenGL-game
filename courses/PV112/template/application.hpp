@@ -45,6 +45,12 @@ struct ConeLightUBO
     float attenuation;
 };
 
+struct FogUBO
+{
+    glm::vec4 color;
+    float density;
+};
+
 struct alignas(256) ObjectUBO
 {
     glm::mat4 model_matrix;  // [  0 -  64) bytes
@@ -85,6 +91,7 @@ class Application : public PV112Application
     std::shared_ptr<Geometry> userChar;
     std::shared_ptr<Geometry> enemyChar;
     std::shared_ptr<Geometry> ground;
+    std::shared_ptr<Geometry> sky;
 
     // Default camera that rotates around center.
     Camera camera;
@@ -99,6 +106,9 @@ class Application : public PV112Application
     GLuint objects_buffer = 0;
     std::vector<ObjectUBO> objects_ubos;
 
+    GLuint fog_buffer = 0;
+    FogUBO fog_ubo;
+
     // Lights
     std::vector<ConeLightUBO> coneLights;
     GLuint lights_buffer = 0;
@@ -109,6 +119,7 @@ class Application : public PV112Application
     GLuint marble_texture = 0;
     GLuint gear_texture = 0;
     GLuint ground_texture = 0;
+    GLuint sky_texture = 0;
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();

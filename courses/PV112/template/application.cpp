@@ -59,9 +59,11 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     userChar = geometries[1];
     enemyChar = geometries[1];
     ground = geometries[2];
+    sky = geometries[2];
 
     gear_texture = load_texture_2d(images_path / "gear.png");
     ground_texture = load_texture_2d(images_path / "ground.png");
+    sky_texture = load_texture_2d(images_path / "sky.jpg");
 
     // --------------------------------------------------------------------------
     // Initialize UBO Data
@@ -71,7 +73,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     camera_ubo.projection = glm::perspective(glm::radians(45.0f), float(width) / float(height), 0.01f, 500.0f);
     camera_ubo.view = glm::lookAt(camera.get_eye_position(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 
-    light_ubo.position = glm::vec4(0.0f, 3.0f, 0.0f, 1.0f);
+    light_ubo.position = glm::vec4(0.0f, 2.0f, 0.0f, 1.0f);
     light_ubo.ambient_color = glm::vec4(1.0f);
     light_ubo.diffuse_color = glm::vec4(1.0f);
     light_ubo.specular_color = glm::vec4(1.0f);
@@ -81,16 +83,18 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(1.0f)});
     objects_ubos.push_back({.model_matrix = glm::scale(glm::mat4(1.f), glm::vec3(0.1f)),
-                            .ambient_color = glm::vec4(1.0f),
+                            .ambient_color = glm::vec4(0.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(1.0f)});
     // User character(closer to screen, rotated)
-    glm::vec4 userCharPos = glm::vec4(-1.f, 0.f, 7.5f, 1.f);
+    glm::vec4 userCharPos = glm::vec4(-0.3f, 0.f, 2.5f, 3.f);
+    glm::vec3 userCharPos3 = glm::vec3(userCharPos) * userCharPos.w;
     // glm::vec4 enemyCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec4 enemyCharPos = glm::vec4(2.f, 0.f, 2.5f, 1.f);
+    glm::vec3 enemyCharPos3 = glm::vec3(enemyCharPos) * enemyCharPos.w;
 
-    glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), glm::vec3(userCharPos));
-    glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::vec3(glm::normalize(userCharPos - enemyCharPos)), glm::vec3(0.f, 1.f, 0.f)));
+    glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), userCharPos3);
+    glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos3 - enemyCharPos3), glm::vec3(0.f, 1.f, 0.f)));
     glm::mat4 charScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
     glm::mat4 charMatrix = charTranslation * charRotation * charScale;
     std::cout << glm::to_string(charMatrix) << std::endl;
@@ -98,15 +102,15 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .ambient_color = glm::vec4(0.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
+    
     // Enemy character(closer to screen, rotated)
-
-    glm::mat4 enemyCharTranslation = glm::translate(glm::mat4(1.f), glm::vec3(enemyCharPos));
-    glm::mat4 enemyCharRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::vec3(glm::normalize(enemyCharPos - userCharPos)), glm::vec3(0.f, 1.f, 0.f)));
+    glm::mat4 enemyCharTranslation = glm::translate(glm::mat4(1.f), enemyCharPos3);
+    glm::mat4 enemyCharRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(enemyCharPos3 - userCharPos3), glm::vec3(0.f, 1.f, 0.f)));
     glm::mat4 enemyCharScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
     glm::mat4 enemyCharMatrix = enemyCharTranslation * enemyCharRotation * enemyCharScale;
     std::cout << glm::to_string(enemyCharMatrix) << std::endl;
     objects_ubos.push_back({.model_matrix = enemyCharMatrix,
-                            .ambient_color = glm::vec4(1.f),
+                            .ambient_color = glm::vec4(0.f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.f)});
 
@@ -114,9 +118,18 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -0.8f, 0.f));
     glm::mat4 groundScale = glm::scale(glm::mat4(1.0f), glm::vec3(300.f));
     objects_ubos.push_back({.model_matrix = groundTranslation * groundScale,
-                            .ambient_color = glm::vec4(1.f),
+                            .ambient_color = glm::vec4(0.f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.f)});
+
+    glm::mat4 skyTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, -6.f));
+    glm::mat4 skyScale = glm::scale(glm::mat4(1.f), glm::vec3(50.f));
+    glm::mat4 skyRotation = glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(1.f, 0.f, 0.f));
+    objects_ubos.push_back({.model_matrix = skyTranslation * skyScale * skyRotation,
+                            .ambient_color = glm::vec4(0.8f),
+                            .diffuse_color = glm::vec4(1.f),
+                            .specular_color = glm::vec4(0.0f)
+    });
 
     // --------------------------------------------------------------------------
     // Cone lights above characters
@@ -124,20 +137,26 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     userCharLight.position = userCharPos + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
     userCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);             // look down the y axis
     userCharLight.angle = cosf(glm::radians(45.f));
-    userCharLight.ambient_color = glm::vec4(0.0f);
+    userCharLight.ambient_color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);;
     userCharLight.diffuse_color = glm::vec4(1.0f);
-    userCharLight.specular_color = glm::vec4(0.0f);
+    userCharLight.specular_color = glm::vec4(1.0f);
 
     coneLights.push_back(userCharLight);
 
     enemyCharLight.position = enemyCharPos + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
     enemyCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);              // look down the y axis
     enemyCharLight.angle = cosf(glm::radians(45.f));
-    enemyCharLight.ambient_color = glm::vec4(0.0f);
+    enemyCharLight.ambient_color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);;
     enemyCharLight.diffuse_color = glm::vec4(1.0f);
-    enemyCharLight.specular_color = glm::vec4(0.0f);
+    enemyCharLight.specular_color = glm::vec4(1.0f);
 
     coneLights.push_back(enemyCharLight);
+
+    // --------------------------------------------------------------------------
+    // Fog
+    // --------------------------------------------------------------------------
+    fog_ubo.color = glm::vec4(0.4, 0.4, 0.4, 1.0);
+    fog_ubo.density = 0.0f;
 
     // --------------------------------------------------------------------------
     // Create Buffers
@@ -153,6 +172,8 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
 
     glCreateBuffers(1, &lights_buffer);
     glNamedBufferStorage(lights_buffer, sizeof(ConeLightUBO) * coneLights.size(), coneLights.data(), GL_DYNAMIC_STORAGE_BIT);
+    glCreateBuffers(1, &fog_buffer);
+    glNamedBufferStorage(fog_buffer, sizeof(FogUBO), &fog_ubo, GL_DYNAMIC_STORAGE_BIT);
     compile_shaders();
 }
 
@@ -164,6 +185,7 @@ Application::~Application()
     glDeleteBuffers(1, &light_buffer);
     glDeleteBuffers(1, &objects_buffer);
     glDeleteBuffers(1, &lights_buffer);
+    glDeleteBuffers(1, &fog_buffer);
 }
 
 // ----------------------------------------------------------------------------
@@ -244,12 +266,13 @@ void Application::render()
         glUseProgram(main_program);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
         glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
-        glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 0 * 256, sizeof(ConeLightUBO));
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, lights_buffer);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 5, fog_buffer);
 
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
         userChar->draw();
 
-        glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 1 * 256, sizeof(ConeLightUBO));
+        // glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 1 * 256, sizeof(ConeLightUBO));
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 3 * 256, sizeof(ObjectUBO));
 
         enemyChar->draw();
@@ -258,6 +281,10 @@ void Application::render()
         glBindTextureUnit(3, ground_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 4 * 256, sizeof(ObjectUBO));
         ground->draw();
+
+        glBindTextureUnit(3, sky_texture);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 5 * 256, sizeof(ObjectUBO));
+        sky->draw();
         break;
     }
 }
