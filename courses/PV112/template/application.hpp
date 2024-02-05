@@ -43,6 +43,8 @@ struct ConeLightUBO
     glm::vec4 direction;
     float angle;
     float attenuation;
+    float p1;
+    float p2;
 };
 
 struct FogUBO
