@@ -57,12 +57,14 @@ layout(binding = 5, std140) uniform Fog {
 
 
 layout(binding = 3) uniform sampler2D healer_texture;
+layout(binding = 6) uniform sampler3D ogreTexture;
 
 layout(location = 0) in vec3 fs_position;
 layout(location = 1) in vec3 fs_normal;
 layout(location = 2) in vec2 fs_texture_coordinate;
 layout(location = 3) uniform bool has_texture = false;
 layout(location = 4) in float fog_factor;
+layout(location = 5) in vec3 color;
 
 layout(location = 0) out vec4 final_color;
 
@@ -77,7 +79,8 @@ vec3 CalcLight(LightS light) {
     float NdotH = max(dot(N, H), 0.0001);
 
     vec3 ambient = object.ambient_color.rgb * light.ambient_color.rgb;
-    vec3 diffuse = object.diffuse_color.rgb * (has_texture ? texture(healer_texture, fs_texture_coordinate).rgb : vec3(1.0)) *
+    // TODO *color?
+    vec3 diffuse = object.diffuse_color.rgb * color *
                    light.diffuse_color.rgb;
     vec3 specular = object.specular_color.rgb * light.specular_color.rgb;
 
@@ -102,22 +105,24 @@ vec3 CalcConeLight(ConeLightS light) {
 
 void main() {
     vec3 light_vector = light.position.xyz - fs_position * light.position.w;
-    // vec3 color = vec3(0);
+    // vec3 color2 = vec3(0);
     
-    vec3 color = CalcLight(LightS(light.position, light.ambient_color, light.diffuse_color, light.specular_color));
+    vec3 color2 = CalcLight(LightS(light.position, light.ambient_color, light.diffuse_color, light.specular_color));
     if (light.position.w == 1.0) {
-       color /= (dot(light_vector, light_vector));
+       color2 /= (dot(light_vector, light_vector));
     }
 
     for(int i = 0; i < coneLight.lights.length(); i++)
     {
         vec3 coneColor = CalcConeLight(coneLight.lights[i]);
-        color += coneColor;
+        color2 += coneColor;
     }
+    color2 += color;
     
 
-    color = color / (color + 1.0);       // tone mapping
-    color = pow(color, vec3(1.0 / 2.2)); // gamma correction
+    color2 = color2 / (color2 + 1.0);       // tone mapping
+    color2 = pow(color2, vec3(1.0 / 2.2)); // gamma correction
 
-    final_color = mix(fog.color, vec4(color, 1.0), fog_factor);
+    final_color = mix(fog.color, vec4(color2, 1.0), fog_factor);
+    // final_color = vec4(color, 1.0);
 }

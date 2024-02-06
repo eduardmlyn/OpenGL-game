@@ -171,7 +171,7 @@ void Geometry_Base::draw() const
     }
     else
     {
-        std::cout << mode << ", " << draw_arrays_count << std::endl;
+        // std::cout << mode << ", " << draw_arrays_count << std::endl;
         glDrawArrays(mode, 0, draw_arrays_count);
     }
 }
@@ -241,25 +241,24 @@ Geometry Geometry::from_file(std::filesystem::path path)
         if (mtSize > 0)
         {
             const tinyobj::material_t &material = materials[0];
-            if (!material.diffuse_texname.empty()) {
+            if (!material.diffuse_texname.empty())
+            {
                 hasTexture = true;
-            
+
                 std::filesystem::path diffusePath = texPath / material.diffuse_texname;
-            
-                std::cout << diffusePath << std::endl << path << std::endl;
+
+                std::cout << diffusePath << std::endl
+                          << path << std::endl;
                 data = stbi_load(diffusePath.generic_string().data(), &width, &height, &channels, 0);
             }
         }
-        
-        
+
         // Loop over faces(polygon)
         size_t index_offset = 0;
         for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++)
         {
             // int material_id = shape.mesh.material_ids[f];
 
-            
-            
             // Loop over vertices in the face.
             for (size_t v = 0; v < 3; v++)
             {
@@ -310,23 +309,25 @@ Geometry Geometry::from_file(std::filesystem::path path)
                 // Convert texture color values from unsigned char to float and normalize
                 // std::cout << data << std::endl;
                 // std::cout << data[channels * idx.texcoord_index] << ", " << data[channels * idx.texcoord_index + 1] << ", " << data[channels * idx.texcoord_index + 2] << std::endl;
-                if (hasTexture) {
-                    float r = static_cast<float>(data[channels * idx.texcoord_index]);
-                    float g = static_cast<float>(data[channels * idx.texcoord_index + 1]);
-                    float b = static_cast<float>(data[channels * idx.texcoord_index + 2]);
+                if (hasTexture)
+                {
+                    float r = static_cast<float>(data[channels * idx.texcoord_index]) / 255.f;
+                    float g = static_cast<float>(data[channels * idx.texcoord_index + 1]) / 255.f;
+                    float b = static_cast<float>(data[channels * idx.texcoord_index + 2]) / 255.f;
                     colors.insert(colors.end(), {r, g, b});
                 }
                 positions.insert(positions.end(), {vx, vy, vz});
                 normals.insert(normals.end(), {nx, ny, nz});
                 tex_coords.insert(tex_coords.end(), {tx, ty});
             }
-            
+
             index_offset += 3;
         }
-        if (hasTexture) {
-            std::cout << colors.at(0) << ", " << colors.at(1) << ", " << colors.at(2) << ", " << "channels: " << channels << std::endl;
+        if (hasTexture)
+        {
+            std::cout << colors.at(0) << ", " << colors.at(1) << ", " << colors.at(2) << ", "
+                      << "channels: " << channels << std::endl;
             stbi_image_free(data);
-            
         }
         glm::vec3 diff = max - min;
         glm::vec3 center = min + 0.5f * diff;

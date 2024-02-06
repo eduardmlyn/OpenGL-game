@@ -37,6 +37,34 @@ GLuint load_texture_2d(const std::filesystem::path filename)
     return texture;
 }
 
+// GLuint load_texture_2d(const std::filesystem::path filename)
+// {
+//     int width, height, channels;
+
+//     unsigned char *data = stbi_load(filename.generic_string().data(), &width, &height, &channels, 4);
+
+//     GLuint texture;
+//     glCreateTextures(GL_TEXTURE_3D, 1, &texture);
+
+//     glTextureStorage3D(texture, (GLsizei)std::log2(width), GL_RGBA8, width, height);
+
+//     glTextureSubImage3D(texture,
+//                         0,                         //
+//                         0, 0,                      //
+//                         width, height,             //
+//                         GL_RGBA, GL_UNSIGNED_BYTE, //
+//                         data);
+
+//     stbi_image_free(data);
+
+//     glGenerateTextureMipmap(texture);
+
+//     glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//     glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+//     return texture;
+// }
+
 Application::Application(int initial_width, int initial_height, std::vector<std::string> arguments)
     : PV112Application(initial_width, initial_height, arguments)
 {
@@ -101,12 +129,12 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     glm::vec3 enemyCharPos3 = glm::vec3(enemyCharPos) * enemyCharPos.w;
 
     glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), userCharPos3);
-    glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos3 - enemyCharPos3), glm::vec3(0.f, 1.f, 0.f)));
+    // glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos3 - enemyCharPos3), glm::vec3(0.f, 1.f, 0.f)));
     glm::mat4 charScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
-    glm::mat4 charMatrix = charTranslation * charRotation * charScale;
+    glm::mat4 charMatrix = charTranslation * /*charRotation **/ charScale;
     std::cout << glm::to_string(charMatrix) << std::endl;
     objects_ubos.push_back({.model_matrix = charMatrix,
-                            .ambient_color = glm::vec4(1.0f),
+                            .ambient_color = glm::vec4(0.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
 
@@ -117,12 +145,12 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     glm::mat4 enemyCharMatrix = enemyCharTranslation * enemyCharRotation * enemyCharScale;
     std::cout << glm::to_string(enemyCharMatrix) << std::endl;
     objects_ubos.push_back({.model_matrix = enemyCharMatrix,
-                            .ambient_color = glm::vec4(1.f),
+                            .ambient_color = glm::vec4(0.f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.f)});
 
     // Ground
-    glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -0.8f, 0.f));
+    glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
     glm::mat4 groundScale = glm::scale(glm::mat4(1.0f), glm::vec3(300.f));
     objects_ubos.push_back({.model_matrix = groundTranslation * groundScale,
                             .ambient_color = glm::vec4(0.8f),
@@ -140,18 +168,18 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     // --------------------------------------------------------------------------
     // Trees
     // --------------------------------------------------------------------------
-    glm::mat4 deadTreeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-1.f));
+    glm::mat4 deadTreeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-1.f, 0.f, -1.f));
     objects_ubos.push_back({.model_matrix = deadTreeTranslation,
                             .ambient_color = glm::vec4(0.8f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.0f)});
 
-    glm::mat4 treeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(1.f, 1.f, -1.f));
-    objects_ubos.push_back({.model_matrix = treeTranslation,
+    glm::mat4 treeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(1.f, 0.f, -1.f));
+    glm::mat4 treeRotation = glm::rotate(glm::mat4(1.f), glm::radians(90.f), glm::vec3(-1.f, 0.f, 0.f));
+    objects_ubos.push_back({.model_matrix = treeTranslation * treeRotation,
                             .ambient_color = glm::vec4(0.8f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.0f)});
-
 
     // --------------------------------------------------------------------------
     // Cone lights above characters
@@ -294,7 +322,7 @@ void Application::render()
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, lights_buffer);
         // glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 0 * 256, sizeof(ConeLightUBO));
         glBindBufferBase(GL_UNIFORM_BUFFER, 5, fog_buffer);
-        
+
         // glBindTextureUnit(3, ogre_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
         userChar->draw();
