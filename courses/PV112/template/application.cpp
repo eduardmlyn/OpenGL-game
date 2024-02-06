@@ -52,18 +52,24 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     // --------------------------------------------------------------------------
     geometries.push_back(make_shared<Sphere>());
     // You can use from_file function to load a Geometry from .obj file
-    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "tank.obj")));
+    // geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "tank.obj")));
+    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "OgreOBJ.obj")));
     geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "ground.obj")));
+    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "tree_winter.obj")));
+    geometries.push_back(make_shared<Geometry>(Geometry::from_file(objects_path / "oakTree.obj")));
 
     sphere = geometries[0];
     userChar = geometries[1];
     enemyChar = geometries[1];
     ground = geometries[2];
     sky = geometries[2];
+    deadTree = geometries[3];
+    tree = geometries[4];
 
     gear_texture = load_texture_2d(images_path / "gear.png");
     ground_texture = load_texture_2d(images_path / "ground.png");
     sky_texture = load_texture_2d(images_path / "sky.jpg");
+    // ogre_texture = load_texture_2d(objects_path / "SkinColorMostro_COLOR.png");
 
     // --------------------------------------------------------------------------
     // Initialize UBO Data
@@ -87,7 +93,8 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(1.0f)});
     // User character(closer to screen, rotated)
-    glm::vec4 userCharPos = glm::vec4(-1.0f, 0.f, 7.5f, 1.f);
+    // glm::vec4 userCharPos = glm::vec4(-1.0f, 0.f, 7.5f, 1.f);
+    glm::vec4 userCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec3 userCharPos3 = glm::vec3(userCharPos) * userCharPos.w;
     // glm::vec4 enemyCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec4 enemyCharPos = glm::vec4(2.f, 0.f, 2.5f, 1.f);
@@ -99,7 +106,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     glm::mat4 charMatrix = charTranslation * charRotation * charScale;
     std::cout << glm::to_string(charMatrix) << std::endl;
     objects_ubos.push_back({.model_matrix = charMatrix,
-                            .ambient_color = glm::vec4(0.0f),
+                            .ambient_color = glm::vec4(1.0f),
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(0.0f)});
 
@@ -110,7 +117,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     glm::mat4 enemyCharMatrix = enemyCharTranslation * enemyCharRotation * enemyCharScale;
     std::cout << glm::to_string(enemyCharMatrix) << std::endl;
     objects_ubos.push_back({.model_matrix = enemyCharMatrix,
-                            .ambient_color = glm::vec4(0.f),
+                            .ambient_color = glm::vec4(1.f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.f)});
 
@@ -131,6 +138,22 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .specular_color = glm::vec4(0.0f)});
 
     // --------------------------------------------------------------------------
+    // Trees
+    // --------------------------------------------------------------------------
+    glm::mat4 deadTreeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-1.f));
+    objects_ubos.push_back({.model_matrix = deadTreeTranslation,
+                            .ambient_color = glm::vec4(0.8f),
+                            .diffuse_color = glm::vec4(1.f),
+                            .specular_color = glm::vec4(0.0f)});
+
+    glm::mat4 treeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(1.f, 1.f, -1.f));
+    objects_ubos.push_back({.model_matrix = treeTranslation,
+                            .ambient_color = glm::vec4(0.8f),
+                            .diffuse_color = glm::vec4(1.f),
+                            .specular_color = glm::vec4(0.0f)});
+
+
+    // --------------------------------------------------------------------------
     // Cone lights above characters
     // --------------------------------------------------------------------------
     glm::vec3 coneLightAmbient = glm::vec3(0.6f);
@@ -138,7 +161,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     userCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);             // look down the y axis
     userCharLight.angle = cosf(glm::radians(30.f));
     userCharLight.attenuation = 1.2f;
-    userCharLight.ambient_color = glm::vec4(coneLightAmbient, 1.0f);
+    userCharLight.ambient_color = glm::vec4(0.0f);
     userCharLight.diffuse_color = glm::vec4(1.0f);
     userCharLight.specular_color = glm::vec4(0.0f);
 
@@ -158,7 +181,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     // Fog
     // --------------------------------------------------------------------------
     fog_ubo.color = glm::vec4(0.4, 0.4, 0.4, 1.0);
-    fog_ubo.density = 0.0f;
+    fog_ubo.density = 0.5f;
 
     // --------------------------------------------------------------------------
     // Create Buffers
@@ -271,7 +294,8 @@ void Application::render()
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, lights_buffer);
         // glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 0 * 256, sizeof(ConeLightUBO));
         glBindBufferBase(GL_UNIFORM_BUFFER, 5, fog_buffer);
-
+        
+        // glBindTextureUnit(3, ogre_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
         userChar->draw();
 
@@ -288,6 +312,13 @@ void Application::render()
         glBindTextureUnit(3, sky_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 5 * 256, sizeof(ObjectUBO));
         sky->draw();
+
+        glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 6 * 256, sizeof(ObjectUBO));
+        deadTree->draw();
+
+        glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 7 * 256, sizeof(ObjectUBO));
+        tree->draw();
         break;
     }
 }

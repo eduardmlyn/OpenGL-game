@@ -10,6 +10,7 @@
 #include "tiny_obj_loader.h"
 #include "glm/vec3.hpp"
 #include <iostream>
+#include <stb_image.h>
 
 // ----------------------------------------------------------------------------
 // Constructors & Destructors
@@ -85,6 +86,7 @@ Geometry_Base::Geometry_Base(GLenum mode, std::vector<float> positions, std::vec
             interleaved_vertices.push_back(bitangents[i * 3 + 2]);
         }
     }
+    std::cout << "color size: " << colors.size() << std::endl;
 
     vertex_buffer_stride = elements_per_vertex * sizeof(float);
     vertex_buffer_size = vertices_count * vertex_buffer_stride;
@@ -98,6 +100,8 @@ Geometry_Base::Geometry_Base(GLenum mode, std::vector<float> positions, std::vec
     }
 
     draw_arrays_count = vertices_count;
+    std::cout << "elements size: " << draw_elements_count << std::endl;
+    std::cout << "arrays size: " << draw_arrays_count << std::endl;
 }
 
 Geometry_Base::Geometry_Base(Geometry_Base &&other) noexcept : Geometry_Base() { swap_fields(*this, other); }
@@ -167,6 +171,7 @@ void Geometry_Base::draw() const
     }
     else
     {
+        std::cout << mode << ", " << draw_arrays_count << std::endl;
         glDrawArrays(mode, 0, draw_arrays_count);
     }
 }
@@ -214,7 +219,7 @@ Geometry Geometry::from_file(std::filesystem::path path)
         auto &attrib = reader.GetAttrib();
         auto &shapes = reader.GetShapes();
         auto &materials = reader.GetMaterials();
-        // std::cout << materials[0].ambient;
+        // std::cout << materials[0].ambient << std::endl;
 
         // Take only the first shape found
         const tinyobj::shape_t &shape = shapes[0];
@@ -227,14 +232,34 @@ Geometry Geometry::from_file(std::filesystem::path path)
         glm::vec3 min{std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
         glm::vec3 max{std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min()};
 
+        std::filesystem::path texPath = path.parent_path();
+        // std::cout << materials.size()<< std::endl;
+        int mtSize = materials.size();
+        bool hasTexture = false;
+        int width, height, channels;
+        unsigned char *data;
+        if (mtSize > 0)
+        {
+            const tinyobj::material_t &material = materials[0];
+            if (!material.diffuse_texname.empty()) {
+                hasTexture = true;
+            
+                std::filesystem::path diffusePath = texPath / material.diffuse_texname;
+            
+                std::cout << diffusePath << std::endl << path << std::endl;
+                data = stbi_load(diffusePath.generic_string().data(), &width, &height, &channels, 0);
+            }
+        }
+        
+        
         // Loop over faces(polygon)
         size_t index_offset = 0;
         for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++)
         {
-            int material_id = shape.mesh.material_ids[f];
+            // int material_id = shape.mesh.material_ids[f];
 
-            const tinyobj::material_t &material = materials[material_id];
-
+            
+            
             // Loop over vertices in the face.
             for (size_t v = 0; v < 3; v++)
             {
@@ -281,15 +306,28 @@ Geometry Geometry::from_file(std::filesystem::path path)
                 max.y = std::max(max.y, vy);
                 max.z = std::max(max.z, vz);
 
-                // std::cout << material.diffuse[0] << ", " << material.diffuse[1] << ", " << material.diffuse[2] << "\n";
-                colors.insert(colors.end(), {material.diffuse[0], material.diffuse[1], material.diffuse[2]});
+                // std::cout << material.diffuse[0] << ", " << material.diffuse[1] << ", " << material.diffuse[2] << std::endl;
+                // Convert texture color values from unsigned char to float and normalize
+                // std::cout << data << std::endl;
+                // std::cout << data[channels * idx.texcoord_index] << ", " << data[channels * idx.texcoord_index + 1] << ", " << data[channels * idx.texcoord_index + 2] << std::endl;
+                if (hasTexture) {
+                    float r = static_cast<float>(data[channels * idx.texcoord_index]);
+                    float g = static_cast<float>(data[channels * idx.texcoord_index + 1]);
+                    float b = static_cast<float>(data[channels * idx.texcoord_index + 2]);
+                    colors.insert(colors.end(), {r, g, b});
+                }
                 positions.insert(positions.end(), {vx, vy, vz});
                 normals.insert(normals.end(), {nx, ny, nz});
                 tex_coords.insert(tex_coords.end(), {tx, ty});
             }
+            
             index_offset += 3;
         }
-
+        if (hasTexture) {
+            std::cout << colors.at(0) << ", " << colors.at(1) << ", " << colors.at(2) << ", " << "channels: " << channels << std::endl;
+            stbi_image_free(data);
+            
+        }
         glm::vec3 diff = max - min;
         glm::vec3 center = min + 0.5f * diff;
         min -= center;
@@ -307,7 +345,7 @@ Geometry Geometry::from_file(std::filesystem::path path)
 
         const int elements_per_vertex = 3 + (!normals.empty() ? 3 : 0) + (!tex_coords.empty() ? 2 : 0);
 
-        return Geometry{GL_TRIANGLES, positions, {/*indices*/}, normals, {/*colors*/}, tex_coords};
+        return Geometry{GL_TRIANGLES, positions, {/*indices*/}, normals, colors, tex_coords};
     }
     std::cerr << "Extension " << extension << " not supported" << std::endl;
 

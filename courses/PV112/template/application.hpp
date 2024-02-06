@@ -94,6 +94,8 @@ class Application : public PV112Application
     std::shared_ptr<Geometry> enemyChar;
     std::shared_ptr<Geometry> ground;
     std::shared_ptr<Geometry> sky;
+    std::shared_ptr<Geometry> deadTree;
+    std::shared_ptr<Geometry> tree;
 
     // Default camera that rotates around center.
     Camera camera;
@@ -122,6 +124,7 @@ class Application : public PV112Application
     GLuint gear_texture = 0;
     GLuint ground_texture = 0;
     GLuint sky_texture = 0;
+    GLuint ogre_texture = 0;
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();
