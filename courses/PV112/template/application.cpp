@@ -37,34 +37,6 @@ GLuint load_texture_2d(const std::filesystem::path filename)
     return texture;
 }
 
-// GLuint load_texture_2d(const std::filesystem::path filename)
-// {
-//     int width, height, channels;
-
-//     unsigned char *data = stbi_load(filename.generic_string().data(), &width, &height, &channels, 4);
-
-//     GLuint texture;
-//     glCreateTextures(GL_TEXTURE_3D, 1, &texture);
-
-//     glTextureStorage3D(texture, (GLsizei)std::log2(width), GL_RGBA8, width, height);
-
-//     glTextureSubImage3D(texture,
-//                         0,                         //
-//                         0, 0,                      //
-//                         width, height,             //
-//                         GL_RGBA, GL_UNSIGNED_BYTE, //
-//                         data);
-
-//     stbi_image_free(data);
-
-//     glGenerateTextureMipmap(texture);
-
-//     glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-//     glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-//     return texture;
-// }
-
 Application::Application(int initial_width, int initial_height, std::vector<std::string> arguments)
     : PV112Application(initial_width, initial_height, arguments)
 {
@@ -97,7 +69,9 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     gear_texture = load_texture_2d(images_path / "gear.png");
     ground_texture = load_texture_2d(images_path / "ground.png");
     sky_texture = load_texture_2d(images_path / "sky.jpg");
-    // ogre_texture = load_texture_2d(objects_path / "SkinColorMostro_COLOR.png");
+    ogre_texture = load_texture_2d(objects_path / "SkinColorMostro_COLOR.png");
+    deadTree_texture = load_texture_2d(objects_path / "trees-2106123_1920.jpg");
+    tree_texture = load_texture_2d(objects_path / "10445_Oak_Tree_v1_diffuse.jpg");
 
     // --------------------------------------------------------------------------
     // Initialize UBO Data
@@ -121,17 +95,17 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(1.0f)});
     // User character(closer to screen, rotated)
-    // glm::vec4 userCharPos = glm::vec4(-1.0f, 0.f, 7.5f, 1.f);
-    glm::vec4 userCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
+    glm::vec4 userCharPos = glm::vec4(-1.0f, -0.1f, 7.5f, 1.f);
+    // glm::vec4 userCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec3 userCharPos3 = glm::vec3(userCharPos) * userCharPos.w;
     // glm::vec4 enemyCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
-    glm::vec4 enemyCharPos = glm::vec4(2.f, 0.f, 2.5f, 1.f);
+    glm::vec4 enemyCharPos = glm::vec4(2.f, -0.1f, 2.5f, 1.f);
     glm::vec3 enemyCharPos3 = glm::vec3(enemyCharPos) * enemyCharPos.w;
 
     glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), userCharPos3);
-    // glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos3 - enemyCharPos3), glm::vec3(0.f, 1.f, 0.f)));
+    glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos3 - enemyCharPos3), glm::vec3(0.f, 1.f, 0.f)));
     glm::mat4 charScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
-    glm::mat4 charMatrix = charTranslation * /*charRotation **/ charScale;
+    glm::mat4 charMatrix = charTranslation * charRotation * charScale;
     std::cout << glm::to_string(charMatrix) << std::endl;
     objects_ubos.push_back({.model_matrix = charMatrix,
                             .ambient_color = glm::vec4(0.0f),
@@ -150,7 +124,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .specular_color = glm::vec4(0.f)});
 
     // Ground
-    glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+    glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -0.5f, 0.f));
     glm::mat4 groundScale = glm::scale(glm::mat4(1.0f), glm::vec3(300.f));
     objects_ubos.push_back({.model_matrix = groundTranslation * groundScale,
                             .ambient_color = glm::vec4(0.8f),
@@ -180,6 +154,8 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .ambient_color = glm::vec4(0.8f),
                             .diffuse_color = glm::vec4(1.f),
                             .specular_color = glm::vec4(0.0f)});
+
+    // treeTranslation
 
     // --------------------------------------------------------------------------
     // Cone lights above characters
@@ -320,19 +296,16 @@ void Application::render()
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_buffer);
         glBindBufferBase(GL_UNIFORM_BUFFER, 1, light_buffer);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, lights_buffer);
-        // glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 0 * 256, sizeof(ConeLightUBO));
         glBindBufferBase(GL_UNIFORM_BUFFER, 5, fog_buffer);
+        glUniform1i(glGetUniformLocation(main_program, "has_2Dtexture"), true);
+        glBindTextureUnit(3, ogre_texture);
 
-        // glBindTextureUnit(3, ogre_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
         userChar->draw();
 
-        // glBindBufferRange(GL_UNIFORM_BUFFER, 4, lights_buffer, 1 * 256, sizeof(ConeLightUBO));
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 3 * 256, sizeof(ObjectUBO));
-
         enemyChar->draw();
 
-        glUniform1i(glGetUniformLocation(main_program, "has_texture"), true);
         glBindTextureUnit(3, ground_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 4 * 256, sizeof(ObjectUBO));
         ground->draw();
@@ -341,10 +314,11 @@ void Application::render()
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 5 * 256, sizeof(ObjectUBO));
         sky->draw();
 
-        glUniform1i(glGetUniformLocation(main_program, "has_texture"), false);
+        glBindTextureUnit(3, deadTree_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 6 * 256, sizeof(ObjectUBO));
         deadTree->draw();
 
+        glBindTextureUnit(3, tree_texture);
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 7 * 256, sizeof(ObjectUBO));
         tree->draw();
         break;

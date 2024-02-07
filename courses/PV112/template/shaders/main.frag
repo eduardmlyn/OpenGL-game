@@ -56,13 +56,12 @@ layout(binding = 5, std140) uniform Fog {
 } fog;
 
 
-layout(binding = 3) uniform sampler2D healer_texture;
-layout(binding = 6) uniform sampler3D ogreTexture;
+layout(binding = 3) uniform sampler2D twoDtexture;
 
 layout(location = 0) in vec3 fs_position;
 layout(location = 1) in vec3 fs_normal;
 layout(location = 2) in vec2 fs_texture_coordinate;
-layout(location = 3) uniform bool has_texture = false;
+layout(location = 3) uniform bool has_2Dtexture = false;
 layout(location = 4) in float fog_factor;
 layout(location = 5) in vec3 color;
 
@@ -80,8 +79,15 @@ vec3 CalcLight(LightS light) {
 
     vec3 ambient = object.ambient_color.rgb * light.ambient_color.rgb;
     // TODO *color?
-    vec3 diffuse = object.diffuse_color.rgb * color *
+    // TODO check for 2dtex and 3dtex
+    vec3 diffuse = object.diffuse_color.rgb *
                    light.diffuse_color.rgb;
+    if (has_2Dtexture) {
+        diffuse *= texture(twoDtexture, fs_texture_coordinate).rgb;
+    }
+    // else if (has_3Dtexture) {
+        // diffuse *= texture(threeDTexture, vec3(fs_texture_coordinate, 1.0)).rgb;
+    // }
     vec3 specular = object.specular_color.rgb * light.specular_color.rgb;
 
     return NdotL * diffuse.rgb + pow(NdotH, object.specular_color.w) * specular;
@@ -125,4 +131,8 @@ void main() {
 
     final_color = mix(fog.color, vec4(color2, 1.0), fog_factor);
     // final_color = vec4(color, 1.0);
+    // final_color = vec4(texture(twoDtexture, fs_texture_coordinate), 1.0);
+    // if (has_2Dtexture) {
+        // final_color = texture(twoDtexture, fs_texture_coordinate);
+    // }
 }

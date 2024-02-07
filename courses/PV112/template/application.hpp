@@ -125,6 +125,8 @@ class Application : public PV112Application
     GLuint ground_texture = 0;
     GLuint sky_texture = 0;
     GLuint ogre_texture = 0;
+    GLuint deadTree_texture = 0;
+    GLuint tree_texture = 0;
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();
