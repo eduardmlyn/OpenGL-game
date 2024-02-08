@@ -11,6 +11,7 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+    charActionHelper.~CharacterAction();
 }
 
 void Renderer::howToPlayRender(int width, int height, gameState *state)

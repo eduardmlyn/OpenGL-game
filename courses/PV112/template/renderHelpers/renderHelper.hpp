@@ -1,12 +1,6 @@
-// TODO is this needed ?
 #pragma once
 #include "../gameHelpers/gameState.hpp"
-// #ifndef GLM_ENABLE_EXPERIMENTAL
-// #define GLM_ENABLE_EXPERIMENTAL
-// #include <glm/glm.hpp>
-// #include <glm/gtc/type_ptr.hpp>
-// #include <glm/ext.hpp>
-// #endif
+#include "../gameHelpers/characterHelper.hpp"
 #include <iostream>
 #include "glad/glad.h"
 #include "imgui.h"
@@ -23,6 +17,7 @@ private:
     ImGuiStyle windowStyle;
     ImVec4 mapRGBAToVectorColor(int red, int green, int blue, float alpha);
     colors cHelper = colors::colors();
+    CharacterAction charActionHelper = CharacterAction::CharacterAction();
     const char *gameName = "HEROES OF DERILIA";
     const char *howToPlayS = "How to play:";
     const char *howToPlayDesc = "The game is a turn based game, with five characters of "

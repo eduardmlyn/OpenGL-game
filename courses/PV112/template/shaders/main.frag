@@ -50,9 +50,8 @@ coneLight;
 layout(binding = 5, std140) uniform Fog {
 	vec4 color;
 	float density;
-	// float start;
-	// float end;
-	// float scale;
+	float start;
+	float end;
 } fog;
 
 
@@ -62,7 +61,7 @@ layout(location = 0) in vec3 fs_position;
 layout(location = 1) in vec3 fs_normal;
 layout(location = 2) in vec2 fs_texture_coordinate;
 layout(location = 3) uniform bool has_2Dtexture = false;
-layout(location = 4) in float fog_factor;
+// layout(location = 4) in float fog_factor;
 layout(location = 5) in vec3 color;
 
 layout(location = 0) out vec4 final_color;
@@ -109,6 +108,12 @@ vec3 CalcConeLight(ConeLightS light) {
     }
 }
 
+float CalcFog() {
+    float fog_coord = length(normalize(fs_position - camera.position));
+    float distance_ratio = 4.0 * fog_coord / fog.end;
+    return exp(-fog.density * distance_ratio);
+}
+
 void main() {
     vec3 light_vector = light.position.xyz - fs_position * light.position.w;
     // vec3 color2 = vec3(0);
@@ -129,8 +134,11 @@ void main() {
     color2 = color2 / (color2 + 1.0);       // tone mapping
     color2 = pow(color2, vec3(1.0 / 2.2)); // gamma correction
 
-    final_color = mix(fog.color, vec4(color2, 1.0), fog_factor);
-    // final_color = vec4(color, 1.0);
+    float fog_factor = CalcFog();
+
+    final_color = mix(vec4(color2, 1.0), fog.color, fog_factor);
+    // final_color = vec4(color2, 1.0);
+    // final_color = fog.color;
     // final_color = vec4(texture(twoDtexture, fs_texture_coordinate), 1.0);
     // if (has_2Dtexture) {
         // final_color = texture(twoDtexture, fs_texture_coordinate);

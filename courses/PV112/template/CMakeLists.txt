@@ -8,5 +8,5 @@
 ################################################################################
 
 # Generates the lecture.
-visitlab_generate_lecture(PV112 project_template EXTRA_FILES "renderHelpers/renderHelper.hpp" "renderHelpers/renderHelper.cpp" "gameHelpers/gameState.hpp" "gameHelpers/gameState.cpp" "colors.hpp")
+visitlab_generate_lecture(PV112 project_template EXTRA_FILES "renderHelpers/renderHelper.hpp" "renderHelpers/renderHelper.cpp" "gameHelpers/gameState.hpp" "gameHelpers/gameState.cpp" "colors.hpp" "gameHelpers/characterHelper.hpp" "gameHelpers/characterHelper.cpp")
 # SET(CMAKE_EXE_LINKER_FLAGS  "/FORCE")

@@ -5,6 +5,8 @@ CharacterAction::CharacterAction()
     std::random_device rd;  // obtain a random number from hardware
     std::mt19937 gen(rd()); // seed the generator
     std::uniform_int_distribution<> distr(0, 100);
+    userChar = {100.f, 30.f};
+    enemyChar = {100.f, 30.f};
 }
 
 CharacterAction::~CharacterAction()
@@ -25,7 +27,7 @@ bool CharacterAction::dealDamageIsKill(bool isUser, float damage)
     float accuracy = distr(gen) / 100.f;
     if (accuracy > 0.8f)
     {
-        return;
+        return false;
     }
     float critChance = distr(gen) / 100.f;
 

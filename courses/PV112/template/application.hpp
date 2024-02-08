@@ -47,10 +47,12 @@ struct ConeLightUBO
     float p2;
 };
 
-struct FogUBO
+struct alignas(32) FogUBO
 {
     glm::vec4 color;
     float density;
+    float start;
+	float end;
 };
 
 struct alignas(256) ObjectUBO
@@ -130,6 +132,8 @@ class Application : public PV112Application
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();
+    
+    int deadTreeCount = 0;
 
     // characterHelper charHelper = characterHelper::characterHelper();
 

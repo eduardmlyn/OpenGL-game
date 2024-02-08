@@ -22,7 +22,7 @@ private:
     bool dealDamageIsKill(bool isUser, float damage);
 
 public:
-    CharacterAction(/* args */);
+    CharacterAction();
     ~CharacterAction();
     bool performBasicAttack(bool isUser);
     bool performSpecialAttack(bool isUser);
