@@ -86,6 +86,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     light_ubo.ambient_color = glm::vec4(1.0f);
     light_ubo.diffuse_color = glm::vec4(1.0f);
     light_ubo.specular_color = glm::vec4(1.0f);
+    light_ubo.attenuation = {.constant = 1.f, .linear = 0.35f, .quadratic = 0.2f};
 
     objects_ubos.push_back({.model_matrix = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.1f)), glm::vec3(light_ubo.position)),
                             .ambient_color = glm::vec4(0.0f),
@@ -143,14 +144,13 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     // --------------------------------------------------------------------------
     // Trees
     // --------------------------------------------------------------------------
-    
+
     // float min = 0.f;
     // float max = -10.f;
 
     // std::vector<ObjectUBO> deadTreeObjects;
     // std::vector<ObjectUBO> treeObjects;
-    
-    
+
     for (size_t i = 0; i < 100; i++)
     {
         glm::mat4 treeScaling = glm::scale(glm::mat4(1.f), glm::vec3(1.f));
@@ -158,29 +158,31 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
         float xCoord = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) + 1.0f) * -10.f;
         float yCoord = 0.f;
         float zCoord = -(sinf(float(i)) + 1.f) * 10.f;
-        if (i % 2 == 0) {
+        if (i % 2 == 0)
+        {
             xCoord = -xCoord;
         }
-        if (i % 5 == 0 && zCoord < -5) {
+        if (i % 5 == 0 && zCoord < -5)
+        {
             float randScale = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) + 1.0f) * 3.f;
             treeScaling = glm::scale(glm::mat4(1.f), glm::vec3(randScale));
             yCoord = randScale / 3.f;
         }
         // if (zCoord > -4.4)
         // {/
-            glm::mat4 deadTreeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(xCoord, yCoord, zCoord));
-            objects_ubos.push_back({.model_matrix = deadTreeTranslation * treeScaling,
-                                       .ambient_color = glm::vec4(0.8f),
-                                       .diffuse_color = glm::vec4(1.f),
-                                       .specular_color = glm::vec4(0.0f)});
+        glm::mat4 deadTreeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(xCoord, yCoord, zCoord));
+        objects_ubos.push_back({.model_matrix = deadTreeTranslation * treeScaling,
+                                .ambient_color = glm::vec4(0.8f),
+                                .diffuse_color = glm::vec4(1.f),
+                                .specular_color = glm::vec4(0.0f)});
         // } else {
-            glm::mat4 treeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-xCoord, yCoord, zCoord));
-            glm::mat4 treeRotation = glm::rotate(glm::mat4(1.f), glm::radians(90.f), glm::vec3(-1.f, 0.f, 0.f));
-            objects_ubos.push_back({.model_matrix = treeTranslation * treeScaling * treeRotation,
-                                    .ambient_color = glm::vec4(0.8f),
-                                    .diffuse_color = glm::vec4(1.f),
-                                    .specular_color = glm::vec4(0.0f)});
-        // }        
+        glm::mat4 treeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-xCoord, yCoord, zCoord));
+        glm::mat4 treeRotation = glm::rotate(glm::mat4(1.f), glm::radians(90.f), glm::vec3(-1.f, 0.f, 0.f));
+        objects_ubos.push_back({.model_matrix = treeTranslation * treeScaling * treeRotation,
+                                .ambient_color = glm::vec4(0.8f),
+                                .diffuse_color = glm::vec4(1.f),
+                                .specular_color = glm::vec4(0.0f)});
+        // }
     }
     // std::cout << "Min: " << min << ", Max: " << max << std::endl;
     // objects_ubos.insert(objects_ubos.end(), deadTreeObjects.begin(), deadTreeObjects.end());
@@ -194,20 +196,20 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     userCharLight.position = userCharPos + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
     userCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);             // look down the y axis
     userCharLight.angle = cosf(glm::radians(30.f));
-    userCharLight.attenuation = 1.2f;
     userCharLight.ambient_color = glm::vec4(0.0f);
     userCharLight.diffuse_color = glm::vec4(1.0f);
     userCharLight.specular_color = glm::vec4(0.0f);
+    userCharLight.attenuation = {.constant = 1.f, .linear = 0.1f, .quadratic = 0.001f};
 
     coneLights.push_back(userCharLight);
 
     enemyCharLight.position = enemyCharPos + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
     enemyCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);              // look down the y axis
     enemyCharLight.angle = cosf(glm::radians(30.f));
-    enemyCharLight.attenuation = 1.2f;
     enemyCharLight.ambient_color = glm::vec4(coneLightAmbient, 1.0f);
     enemyCharLight.diffuse_color = glm::vec4(1.0f);
     enemyCharLight.specular_color = glm::vec4(0.0f);
+    enemyCharLight.attenuation = {.constant = 1.f, .linear = 0.1f, .quadratic = 0.001f};
 
     coneLights.push_back(enemyCharLight);
 
@@ -215,9 +217,8 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     // Fog
     // --------------------------------------------------------------------------
     fog_ubo.color = glm::vec4(0.4, 0.4, 0.4, 1.0);
-    fog_ubo.density = 0.6f;
-    fog_ubo.start = 2.5f;
-    fog_ubo.end = 10.f;
+    fog_ubo.density = 0.575f;
+    fog_ubo.end = 35.f;
 
     // --------------------------------------------------------------------------
     // Create Buffers
@@ -299,7 +300,6 @@ void Application::render()
     // --------------------------------------------------------------------------
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 
-
     // Draw objects
     // glUseProgram(main_program);
     GLint param = 0;
@@ -307,7 +307,7 @@ void Application::render()
     switch (gameState.currentState)
     {
     case GAME_MENU:
-    
+
         // Clear
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -325,7 +325,7 @@ void Application::render()
         break;
     case PLAY_MENU:
     case PLAY_VS_AI:
-        
+
         // Clear
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -361,12 +361,13 @@ void Application::render()
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 5 * 256, sizeof(ObjectUBO));
         // sky->draw();
 
-        for (size_t i = 0; i < 100; i++) {
+        for (size_t i = 0; i < 100; i++)
+        {
             glBindTextureUnit(3, deadTree_texture);
             glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, (6 + i * 2) * 256, sizeof(ObjectUBO));
             deadTree->draw();
-        // }
-        // for (size_t i = 0; i < 40 - deadTreeCount; i++) {
+            // }
+            // for (size_t i = 0; i < 40 - deadTreeCount; i++) {
             glBindTextureUnit(3, tree_texture);
             glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, (7 + i * 2) * 256, sizeof(ObjectUBO));
             tree->draw();

@@ -1,10 +1,12 @@
 #include <random>
-// #include <time.h>
+// #include <algorithm>
 
 struct CharacterData
 {
     float health;
     float armor;
+    int specialAttackCD;
+    int specialDefenseCD;
 };
 
 class CharacterAction
@@ -19,12 +21,13 @@ private:
     float accuracy = 0.8f;
     std::uniform_int_distribution<> distr;
     std::mt19937 gen;
-    bool dealDamageIsKill(bool isUser, float damage);
+    void dealDamageIsKill(bool isUser, float damage);
 
 public:
     CharacterAction();
     ~CharacterAction();
-    bool performBasicAttack(bool isUser);
-    bool performSpecialAttack(bool isUser);
+    void performBasicAttack(bool isUser);
+    void performSpecialAttack(bool isUser);
     void performSpecialDefense(bool isUser);
+    bool isCharDead(bool isUser);
 };

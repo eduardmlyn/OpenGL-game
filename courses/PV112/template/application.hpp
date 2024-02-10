@@ -26,12 +26,20 @@ struct CameraUBO
     glm::vec4 position;
 };
 
+struct alignas(16) LightAttenuation
+{
+    float constant;
+    float linear;
+    float quadratic;
+};
+
 struct LightUBO
 {
     glm::vec4 position;
     glm::vec4 ambient_color;
     glm::vec4 diffuse_color;
     glm::vec4 specular_color;
+    LightAttenuation attenuation;
 };
 
 struct ConeLightUBO
@@ -42,17 +50,17 @@ struct ConeLightUBO
     glm::vec4 specular_color;
     glm::vec4 direction;
     float angle;
-    float attenuation;
-    float p1;
-    float p2;
+    float padding1;
+    float padding2;
+    float padding3;
+    LightAttenuation attenuation;
 };
 
 struct alignas(32) FogUBO
 {
     glm::vec4 color;
     float density;
-    float start;
-	float end;
+    float end;
 };
 
 struct alignas(256) ObjectUBO
@@ -132,7 +140,7 @@ class Application : public PV112Application
 
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();
-    
+
     int deadTreeCount = 0;
 
     // characterHelper charHelper = characterHelper::characterHelper();

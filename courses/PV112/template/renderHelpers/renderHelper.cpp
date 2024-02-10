@@ -66,6 +66,32 @@ void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gear
         state->PlayMenu();
     }
     ImGui::End();
+
+    float widthFraction = width / 3.f;
+    float heightFraction = height / 5.f;
+    float padding = 10.f;
+    float windowWidth = widthFraction - 2 * padding;
+    float windowHeight = heightFraction - 2 * padding;
+
+    // -------------------------------
+    // User Character Interface
+    // -------------------------------
+    ImGui::Begin("User character");
+    ImGui::SetWindowSize(ImVec2(windowWidth, windowHeight));
+    ImGui::SetWindowPos(ImVec2(widthFraction * 2 + padding, heightFraction * 4 + padding));
+
+    if (ImGui::Button("Basic attack", ImVec2(windowWidth / 3 - padding * 2, windowHeight / 2 - padding * 2)))
+    {
+        /* code */
+    }
+
+    // ImGui::GetCursorScreenPos();
+    float hght = ImGui::GetWindowHeight();
+    ImVec2 size = ImGui::GetWindowPos();
+    float wdth = ImGui::GetWindowWidth();
+    std::cout << "Height x Width: " << hght << " x " << wdth << " and Position: " << size.x << ", " << size.y << std::endl;
+
+    ImGui::End();
 }
 
 void Renderer::playMenuRender(int width, int height, gameState *state)
@@ -92,7 +118,7 @@ void Renderer::playMenuRender(int width, int height, gameState *state)
     ImGui::Begin("Play Menu", nullptr, playMenuFlags);
     ImGui::SetWindowSize(ImVec2(windowWidth, windowHeight));
     ImGui::SetWindowPos(ImVec2(widthFraction, heightFraction));
-    
+
     ImGui::SetCursorPos(ImVec2(buttonWidthPadding, buttonHeightPadding));
     if (ImGui::Button("Back", buttonSize))
     {
@@ -102,7 +128,6 @@ void Renderer::playMenuRender(int width, int height, gameState *state)
     ImGui::SetCursorPos(ImVec2(buttonWidthPadding, heightFraction + buttonHeightPadding));
     if (ImGui::Button("Exit to Main Menu", buttonSize))
     {
-        // TODO change the GameMenu function
         state->GameMenu();
     }
     ImGui::SetCursorPos(ImVec2(buttonWidthPadding, heightFraction * 2 + buttonHeightPadding));

@@ -5,15 +5,15 @@ CharacterAction::CharacterAction()
     std::random_device rd;  // obtain a random number from hardware
     std::mt19937 gen(rd()); // seed the generator
     std::uniform_int_distribution<> distr(0, 100);
-    userChar = {100.f, 30.f};
-    enemyChar = {100.f, 30.f};
+    userChar = {100.f, 30.f, 0, 0};
+    enemyChar = {100.f, 30.f, 0, 0};
 }
 
 CharacterAction::~CharacterAction()
 {
 }
 
-bool CharacterAction::dealDamageIsKill(bool isUser, float damage)
+void CharacterAction::dealDamageIsKill(bool isUser, float damage)
 {
     CharacterData *character;
     if (isUser)
@@ -27,7 +27,7 @@ bool CharacterAction::dealDamageIsKill(bool isUser, float damage)
     float accuracy = distr(gen) / 100.f;
     if (accuracy > 0.8f)
     {
-        return false;
+        return;
     }
     float critChance = distr(gen) / 100.f;
 
@@ -44,17 +44,35 @@ bool CharacterAction::dealDamageIsKill(bool isUser, float damage)
         character->health += character->armor;
         character->armor = 0.f;
     }
-    return character->health <= 0;
 }
 
-// TODO change return value?
-inline bool CharacterAction::performBasicAttack(bool isUser)
+inline void CharacterAction::performBasicAttack(bool isUser)
 {
+    if (isUser)
+    {
+        userChar.specialAttackCD = std::max(0, userChar.specialAttackCD - 1);
+        userChar.specialDefenseCD = std::max(0, userChar.specialDefenseCD - 1);
+    }
+    else
+    {
+        enemyChar.specialAttackCD = std::max(0, enemyChar.specialAttackCD - 1);
+        enemyChar.specialDefenseCD = std::max(0, enemyChar.specialDefenseCD - 1);
+    }
+
     return this->dealDamageIsKill(isUser, basicAttackDamage);
 }
 
-inline bool CharacterAction::performSpecialAttack(bool isUser)
+inline void CharacterAction::performSpecialAttack(bool isUser)
 {
+    if (isUser)
+    {
+        userChar.specialAttackCD = 3;
+    }
+    else
+    {
+        enemyChar.specialAttackCD = 3;
+    }
+
     return this->dealDamageIsKill(isUser, specialAttackDamage);
 }
 
@@ -69,10 +87,15 @@ inline void CharacterAction::performSpecialDefense(bool isUser)
     {
         character = &enemyChar;
     }
-    // float accuracy = distr(gen) / 100.f; // TODO is this needed?
-    // if (accuracy > 0.8f)
-    // {
-    //     return;
-    // }
+    character->specialDefenseCD = 3;
     character->armor += specialDefenseArmor;
+}
+
+bool CharacterAction::isCharDead(bool isUser)
+{
+    if (isUser)
+    {
+        return userChar.health <= 0;
+    }
+    return enemyChar.health <= 0;
 }

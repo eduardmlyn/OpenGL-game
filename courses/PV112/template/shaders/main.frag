@@ -7,11 +7,18 @@ layout(binding = 0, std140) uniform Camera {
 }
 camera;
 
+struct LightAttenuation {
+    float constant;
+    float linear;
+    float quadratic;
+};
+
 struct LightS {
     vec4 position;
     vec4 ambient_color;
     vec4 diffuse_color;
     vec4 specular_color;
+    LightAttenuation attenuation;
 };
 
 layout(binding = 1, std140) uniform Light {
@@ -19,12 +26,12 @@ layout(binding = 1, std140) uniform Light {
     vec4 ambient_color;
     vec4 diffuse_color;
     vec4 specular_color;
+    LightAttenuation attenuation;
 }
 light;
 
 layout(binding = 2, std140) uniform Object {
     mat4 model_matrix;
-
     vec4 ambient_color;
     vec4 diffuse_color;
     vec4 specular_color;
@@ -38,8 +45,10 @@ struct ConeLightS {
     vec4 specular_color;
     vec4 direction;
     float angle;
-    float attenuation;
-    float p1; float p2;
+    float padding1;
+    float padding2; 
+    float padding3;
+    LightAttenuation attenuation;
 };
 
 layout(binding = 4, std430) buffer ConeLight {
@@ -50,7 +59,6 @@ coneLight;
 layout(binding = 5, std140) uniform Fog {
 	vec4 color;
 	float density;
-	float start;
 	float end;
 } fog;
 
@@ -61,7 +69,6 @@ layout(location = 0) in vec3 fs_position;
 layout(location = 1) in vec3 fs_normal;
 layout(location = 2) in vec2 fs_texture_coordinate;
 layout(location = 3) uniform bool has_2Dtexture = false;
-// layout(location = 4) in float fog_factor;
 layout(location = 5) in vec3 color;
 
 layout(location = 0) out vec4 final_color;
@@ -77,16 +84,11 @@ vec3 CalcLight(LightS light) {
     float NdotH = max(dot(N, H), 0.0001);
 
     vec3 ambient = object.ambient_color.rgb * light.ambient_color.rgb;
-    // TODO *color?
-    // TODO check for 2dtex and 3dtex
     vec3 diffuse = object.diffuse_color.rgb *
                    light.diffuse_color.rgb;
     if (has_2Dtexture) {
         diffuse *= texture(twoDtexture, fs_texture_coordinate).rgb;
     }
-    // else if (has_3Dtexture) {
-        // diffuse *= texture(threeDTexture, vec3(fs_texture_coordinate, 1.0)).rgb;
-    // }
     vec3 specular = object.specular_color.rgb * light.specular_color.rgb;
 
     return NdotL * diffuse.rgb + pow(NdotH, object.specular_color.w) * specular;
@@ -96,11 +98,9 @@ vec3 CalcConeLight(ConeLightS light) {
     vec3 lightToPixel = normalize(fs_position - light.position.xyz) ;    
     float spot = dot(lightToPixel, light.direction.xyz);
     if (spot > light.angle) {
-        LightS l = LightS(light.position, light.ambient_color, light.diffuse_color, light.specular_color);
-        // TODO calculate normal light but without the camera's position to make it similar like in swgoh when char is highlited
-        vec3 color = CalcLight(l) / light.attenuation;
+        LightS l = LightS(light.position, light.ambient_color, light.diffuse_color, light.specular_color, light.attenuation);
+        vec3 color = CalcLight(l);// / light.attenuation;
         float spotIntensity = (1.0 - (1.0 - spot)/(1.0 - light.angle));
-        // color = vec3(0, 0, 0);
         return color * spotIntensity;
     }
     else {
@@ -109,38 +109,35 @@ vec3 CalcConeLight(ConeLightS light) {
 }
 
 float CalcFog() {
-    float fog_coord = length(normalize(fs_position - camera.position));
+    float fog_coord = length(camera.position - fs_position);
     float distance_ratio = 4.0 * fog_coord / fog.end;
-    return exp(-fog.density * distance_ratio);
+    float distance_square = distance_ratio * distance_ratio;
+    float density_square = fog.density * fog.density;
+    return exp(-distance_square * density_square);
+}
+
+float CalcAttenuation(vec3 light_vector, LightAttenuation attenuation) {
+    float dist = length(light_vector);
+    return 1 / (attenuation.constant + attenuation.linear * dist + attenuation.quadratic * dist * dist);
 }
 
 void main() {
     vec3 light_vector = light.position.xyz - fs_position * light.position.w;
-    // vec3 color2 = vec3(0);
-    
-    vec3 color2 = CalcLight(LightS(light.position, light.ambient_color, light.diffuse_color, light.specular_color));
+    LightS staticLight = LightS(light.position, light.ambient_color, light.diffuse_color, light.specular_color, light.attenuation);
+    vec3 color2 = CalcLight(staticLight) * CalcAttenuation(light_vector, light.attenuation);
     if (light.position.w == 1.0) {
        color2 /= (dot(light_vector, light_vector));
     }
 
     for(int i = 0; i < coneLight.lights.length(); i++)
     {
-        vec3 coneColor = CalcConeLight(coneLight.lights[i]);
+        vec3 coneColor = CalcConeLight(coneLight.lights[i]) * CalcAttenuation(light_vector, coneLight.lights[i].attenuation);
         color2 += coneColor;
-    }
-    color2 += color;
-    
+    }    
 
     color2 = color2 / (color2 + 1.0);       // tone mapping
     color2 = pow(color2, vec3(1.0 / 2.2)); // gamma correction
 
     float fog_factor = CalcFog();
-
-    final_color = mix(vec4(color2, 1.0), fog.color, fog_factor);
-    // final_color = vec4(color2, 1.0);
-    // final_color = fog.color;
-    // final_color = vec4(texture(twoDtexture, fs_texture_coordinate), 1.0);
-    // if (has_2Dtexture) {
-        // final_color = texture(twoDtexture, fs_texture_coordinate);
-    // }
+    final_color = mix(fog.color, vec4(color2, 1.0), fog_factor);
 }
