@@ -18,6 +18,7 @@
         "gtest",
         "lodepng",
         "stb",
-        "openal-soft"
+        "openal-soft",
+        "freealut"
     ]
 }

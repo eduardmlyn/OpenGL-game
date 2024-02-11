@@ -2,6 +2,9 @@
 #include "../gameHelpers/gameState.hpp"
 #include "../gameHelpers/characterHelper.hpp"
 #include <iostream>
+#include <string>
+#include <iomanip>
+#include <sstream>
 #include "glad/glad.h"
 #include "imgui.h"
 #include "../colors.hpp"
@@ -14,10 +17,12 @@ private:
     ImGuiWindowFlags childWindowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysVerticalScrollbar;
     ImGuiWindowFlags toggleMenuFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoNavInputs;
     ImGuiWindowFlags playMenuFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
+    ImGuiWindowFlags characterDataFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoFocusOnAppearing;
     ImGuiStyle windowStyle;
     ImVec4 mapRGBAToVectorColor(int red, int green, int blue, float alpha);
     colors cHelper = colors::colors();
-    CharacterAction charActionHelper = CharacterAction::CharacterAction();
+    std::filesystem::path lecture_folder_path;
+    CharacterAction charActionHelper;
     const char *gameName = "HEROES OF DERILIA";
     const char *howToPlayS = "How to play:";
     const char *howToPlayDesc = "The game is a turn based game, with five characters of "
@@ -82,11 +87,13 @@ private:
                                 "\tgain speed up, accuracy up, critical chance up and inflict accuracy down, defense down, attack and ability damage down to target enemy.";
 
 public:
+    Renderer(std::filesystem::path lecture_folder_path);
     Renderer();
     ~Renderer();
     void howToPlayRender(int width, int height, gameState *state);
-    void aiPlayRender(int width, int height, gameState *state, GLuint gearTexture);
+    void aiPlayRender(int width, int height, gameState *state, GLuint gearTexture, bool inAnimation, bool *animateBody, bool *enemyAnimate);
     void playMenuRender(int width, int height, gameState *state);
     void menuRender(int width, int height, gameState *state);
     void localPvPRender(GLuint program);
+    bool aiMove();
 };

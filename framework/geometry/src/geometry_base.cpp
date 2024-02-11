@@ -86,7 +86,7 @@ Geometry_Base::Geometry_Base(GLenum mode, std::vector<float> positions, std::vec
             interleaved_vertices.push_back(bitangents[i * 3 + 2]);
         }
     }
-    std::cout << "color size: " << colors.size() << std::endl;
+    // std::cout << "color size: " << colors.size() << std::endl;
 
     vertex_buffer_stride = elements_per_vertex * sizeof(float);
     vertex_buffer_size = vertices_count * vertex_buffer_stride;
@@ -100,8 +100,8 @@ Geometry_Base::Geometry_Base(GLenum mode, std::vector<float> positions, std::vec
     }
 
     draw_arrays_count = vertices_count;
-    std::cout << "elements size: " << draw_elements_count << std::endl;
-    std::cout << "arrays size: " << draw_arrays_count << std::endl;
+    // std::cout << "elements size: " << draw_elements_count << std::endl;
+    // std::cout << "arrays size: " << draw_arrays_count << std::endl;
 }
 
 Geometry_Base::Geometry_Base(Geometry_Base &&other) noexcept : Geometry_Base() { swap_fields(*this, other); }
@@ -247,8 +247,8 @@ Geometry Geometry::from_file(std::filesystem::path path)
 
                 std::filesystem::path diffusePath = texPath / material.diffuse_texname;
 
-                std::cout << diffusePath << std::endl
-                          << path << std::endl;
+                // std::cout << diffusePath << std::endl
+                //   << path << std::endl;
                 data = stbi_load(diffusePath.generic_string().data(), &width, &height, &channels, 0);
             }
         }

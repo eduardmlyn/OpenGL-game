@@ -34,7 +34,8 @@ include(cmake/modules.cmake)
 enable_testing()
 
 # added modules
-# find_package(OpenAL REQUIRED)
+find_package(OpenAL REQUIRED)
+find_package(FreeALUT REQUIRED)
 
 # Initialize the CMake build process.
 visitlab_prepare_build()
@@ -63,5 +64,5 @@ visitlab_add_modules(${visitlab_required_modules})
 set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/dist" CACHE STRING "Install path" FORCE)
 set(CMAKE_INSTALL_RPATH "./")
 
-
-# target_link_libraries(PV112_project_template PUBLIC OpenAL)
+target_link_libraries(PV112_project_template PUBLIC OpenAL::OpenAL)
+target_link_libraries(PV112_project_template PUBLIC FreeALUT::alut)

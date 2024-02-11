@@ -40,7 +40,7 @@ GLuint load_texture_2d(const std::filesystem::path filename)
 Application::Application(int initial_width, int initial_height, std::vector<std::string> arguments)
     : PV112Application(initial_width, initial_height, arguments)
 {
-    renderer = Renderer::Renderer();
+    renderer = Renderer::Renderer(lecture_folder_path);
     this->width = initial_width;
     this->height = initial_height;
 
@@ -76,9 +76,7 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     // --------------------------------------------------------------------------
     // Initialize UBO Data
     // --------------------------------------------------------------------------
-    std::cout << glm::to_string(camera.get_eye_position()) << std::endl;
     camera_ubo.position = glm::vec4(camera.get_eye_position(), 1.0f);
-    std::cout << glm::to_string(camera_ubo.position) << std::endl;
     camera_ubo.projection = glm::perspective(glm::radians(45.0f), float(width) / float(height), 0.01f, 500.0f);
     camera_ubo.view = glm::lookAt(camera.get_eye_position(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 
@@ -97,33 +95,32 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
                             .diffuse_color = glm::vec4(1.0f),
                             .specular_color = glm::vec4(1.0f)});
     // User character(closer to screen, rotated)
-    glm::vec4 userCharPos = glm::vec4(-1.0f, -0.1f, 7.5f, 1.f);
-    // glm::vec4 userCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
-    glm::vec3 userCharPos3 = glm::vec3(userCharPos) * userCharPos.w;
-    // glm::vec4 enemyCharPos = glm::vec4(0.f, 0.f, 0.f, 1.f);
-    glm::vec4 enemyCharPos = glm::vec4(2.f, -0.1f, 2.5f, 1.f);
-    glm::vec3 enemyCharPos3 = glm::vec3(enemyCharPos) * enemyCharPos.w;
+    userCharPos = glm::vec3(-1.0f, -0.1f, 7.5f);
+    enemyCharPos = glm::vec3(3.f, -0.1f, 2.5f);
+    // dirToEnemy = glm::normalize(enemyCharPos3 - userCharPos3);
+    // dirToUser = glm::normalize(userCharPos3 - enemyCharPos3);
 
-    glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), userCharPos3);
-    glm::mat4 charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos3 - enemyCharPos3), glm::vec3(0.f, 1.f, 0.f)));
-    glm::mat4 charScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
+    glm::mat4 charTranslation = glm::translate(glm::mat4(1.f), userCharPos);
+    charRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(userCharPos - enemyCharPos), glm::vec3(0.f, 1.f, 0.f)));
+    charScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
     glm::mat4 charMatrix = charTranslation * charRotation * charScale;
-    std::cout << glm::to_string(charMatrix) << std::endl;
-    objects_ubos.push_back({.model_matrix = charMatrix,
-                            .ambient_color = glm::vec4(0.0f),
-                            .diffuse_color = glm::vec4(1.0f),
-                            .specular_color = glm::vec4(0.0f)});
+    userCharM = {.model_matrix = charMatrix,
+                 .ambient_color = glm::vec4(0.0f),
+                 .diffuse_color = glm::vec4(1.0f),
+                 .specular_color = glm::vec4(0.0f)};
+    objects_ubos.push_back(userCharM);
 
     // Enemy character(closer to screen, rotated)
-    glm::mat4 enemyCharTranslation = glm::translate(glm::mat4(1.f), enemyCharPos3);
-    glm::mat4 enemyCharRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(enemyCharPos3 - userCharPos3), glm::vec3(0.f, 1.f, 0.f)));
-    glm::mat4 enemyCharScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
+    glm::mat4 enemyCharTranslation = glm::translate(glm::mat4(1.f), enemyCharPos);
+    enemyCharRotation = glm::inverse(glm::lookAt(glm::vec3(0.f), glm::normalize(enemyCharPos - userCharPos), glm::vec3(0.f, 1.f, 0.f)));
+    enemyCharScale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
     glm::mat4 enemyCharMatrix = enemyCharTranslation * enemyCharRotation * enemyCharScale;
-    std::cout << glm::to_string(enemyCharMatrix) << std::endl;
-    objects_ubos.push_back({.model_matrix = enemyCharMatrix,
-                            .ambient_color = glm::vec4(0.f),
-                            .diffuse_color = glm::vec4(1.f),
-                            .specular_color = glm::vec4(0.f)});
+    enemyCharM = {.model_matrix = enemyCharMatrix,
+                  .ambient_color = glm::vec4(0.f),
+                  .diffuse_color = glm::vec4(1.f),
+                  .specular_color = glm::vec4(0.f)};
+
+    objects_ubos.push_back(enemyCharM);
 
     // Ground
     glm::mat4 groundTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -0.5f, 0.f));
@@ -145,16 +142,9 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
     // Trees
     // --------------------------------------------------------------------------
 
-    // float min = 0.f;
-    // float max = -10.f;
-
-    // std::vector<ObjectUBO> deadTreeObjects;
-    // std::vector<ObjectUBO> treeObjects;
-
     for (size_t i = 0; i < 100; i++)
     {
         glm::mat4 treeScaling = glm::scale(glm::mat4(1.f), glm::vec3(1.f));
-        // std::cout << static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) + 1.0f) * -4.f << std::endl;
         float xCoord = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) + 1.0f) * -10.f;
         float yCoord = 0.f;
         float zCoord = -(sinf(float(i)) + 1.f) * 10.f;
@@ -168,33 +158,25 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
             treeScaling = glm::scale(glm::mat4(1.f), glm::vec3(randScale));
             yCoord = randScale / 3.f;
         }
-        // if (zCoord > -4.4)
-        // {/
         glm::mat4 deadTreeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(xCoord, yCoord, zCoord));
         objects_ubos.push_back({.model_matrix = deadTreeTranslation * treeScaling,
                                 .ambient_color = glm::vec4(0.8f),
                                 .diffuse_color = glm::vec4(1.f),
                                 .specular_color = glm::vec4(0.0f)});
-        // } else {
         glm::mat4 treeTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-xCoord, yCoord, zCoord));
         glm::mat4 treeRotation = glm::rotate(glm::mat4(1.f), glm::radians(90.f), glm::vec3(-1.f, 0.f, 0.f));
         objects_ubos.push_back({.model_matrix = treeTranslation * treeScaling * treeRotation,
                                 .ambient_color = glm::vec4(0.8f),
                                 .diffuse_color = glm::vec4(1.f),
                                 .specular_color = glm::vec4(0.0f)});
-        // }
     }
-    // std::cout << "Min: " << min << ", Max: " << max << std::endl;
-    // objects_ubos.insert(objects_ubos.end(), deadTreeObjects.begin(), deadTreeObjects.end());
-    // objects_ubos.insert(objects_ubos.end(), treeObjects.begin(), treeObjects.end());
-    // deadTreeCount = deadTreeObjects.size();
 
     // --------------------------------------------------------------------------
     // Cone lights above characters
     // --------------------------------------------------------------------------
     glm::vec3 coneLightAmbient = glm::vec3(0.6f);
-    userCharLight.position = userCharPos + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
-    userCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);             // look down the y axis
+    userCharLight.position = glm::vec4(userCharPos, 1.f) + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
+    userCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);                             // look down the y axis
     userCharLight.angle = cosf(glm::radians(30.f));
     userCharLight.ambient_color = glm::vec4(0.0f);
     userCharLight.diffuse_color = glm::vec4(1.0f);
@@ -203,8 +185,8 @@ Application::Application(int initial_width, int initial_height, std::vector<std:
 
     coneLights.push_back(userCharLight);
 
-    enemyCharLight.position = enemyCharPos + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
-    enemyCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);              // look down the y axis
+    enemyCharLight.position = glm::vec4(enemyCharPos, 1.f) + glm::vec4(0.f, 2.f, 0.f, 0.f); // position light above character
+    enemyCharLight.direction = glm::vec4(0.f, -1.f, 0.f, 0.f);                              // look down the y axis
     enemyCharLight.angle = cosf(glm::radians(30.f));
     enemyCharLight.ambient_color = glm::vec4(coneLightAmbient, 1.0f);
     enemyCharLight.diffuse_color = glm::vec4(1.0f);
@@ -266,22 +248,54 @@ void Application::delete_shaders()
     {
         glDeleteProgram(main_program);
     }
-    // glGetProgramiv(lights_program, GL_LINK_STATUS, &param);
-    // if (param == GL_TRUE)
-    // {
-    // glDeleteProgram(lights_program);
-    // }
 }
 
 void Application::compile_shaders()
 {
     delete_shaders();
     main_program = create_program(lecture_shaders_path / "main.vert", lecture_shaders_path / "main.frag");
-    // lights_program = create_program(lecture_shaders_path / "lights.vert", lecture_shaders_path / "lights.frag");
     std::cout << "Shaders are reloaded." << std::endl;
 }
 
-void Application::update(float delta) {}
+void Application::update(float delta)
+{
+    if (!isAnimating)
+    {
+        return;
+    }
+
+    deltaMerge += delta;
+    if (deltaMerge >= animateTimeout)
+    {
+        shouldAnimate = true;
+        if (posIndex == maxIndex || backwards)
+        {
+            posIndex--;
+            backwards = true;
+        }
+        else
+        {
+            posIndex++;
+        }
+        if (posIndex == -1)
+        {
+            shouldAnimate = false;
+            isAnimating = false;
+            backwards = false;
+            posIndex = 1;
+            if (!enemyAnimate)
+            {
+                shouldAnimate = renderer.aiMove();
+                isAnimating = shouldAnimate; // if should animate, then its animating
+                enemyAnimate = true;
+            }
+            else
+            {
+                enemyAnimate = false;
+            }
+        }
+    }
+}
 
 void Application::render()
 {
@@ -301,7 +315,6 @@ void Application::render()
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 
     // Draw objects
-    // glUseProgram(main_program);
     GLint param = 0;
 
     switch (gameState.currentState)
@@ -346,9 +359,24 @@ void Application::render()
         glBindBufferBase(GL_UNIFORM_BUFFER, 5, fog_buffer);
         glUniform1i(glGetUniformLocation(main_program, "has_2Dtexture"), true);
         glBindTextureUnit(3, ogre_texture);
+        if (shouldAnimate && !enemyAnimate)
+        {
+            currentPosition = userAnimatePos[posIndex];
+            glm::mat4 translation = glm::translate(glm::mat4(1.f), currentPosition);
+            userCharM.model_matrix = translation * charRotation * charScale;
+            glNamedBufferSubData(objects_buffer, 2 * 256, sizeof(ObjectUBO), &userCharM);
+        }
 
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 2 * 256, sizeof(ObjectUBO));
         userChar->draw();
+
+        if (shouldAnimate && enemyAnimate)
+        {
+            currentPosition = enemyAnimatePos[posIndex];
+            glm::mat4 translation = glm::translate(glm::mat4(1.f), currentPosition);
+            userCharM.model_matrix = translation * enemyCharRotation * charScale;
+            glNamedBufferSubData(objects_buffer, 3 * 256, sizeof(ObjectUBO), &userCharM);
+        }
 
         glBindBufferRange(GL_UNIFORM_BUFFER, 2, objects_buffer, 3 * 256, sizeof(ObjectUBO));
         enemyChar->draw();
@@ -378,6 +406,8 @@ void Application::render()
 
 void Application::render_ui()
 {
+    bool shouldEnemy = false;
+
     switch (gameState.currentState)
     {
     case GAME_MENU:
@@ -388,7 +418,23 @@ void Application::render_ui()
         break;
     case PLAY_VS_AI:
         // TODO add other textures for icon health and other stuff?
-        renderer.aiPlayRender(width, height, &gameState, gear_texture);
+        renderer.aiPlayRender(width, height, &gameState, gear_texture, isAnimating, &shouldAnimate, &shouldEnemy);
+        if (shouldAnimate)
+        {
+            currentPosition = userCharPos;
+            isAnimating = true;
+        }
+        if (shouldEnemy)
+        {
+            if (renderer.aiMove())
+            {
+                currentPosition = enemyCharPos;
+                isAnimating = true;
+                shouldAnimate = true;
+                enemyAnimate = true;
+            }
+        }
+
         break;
     case HOW_TO_PLAY:
         renderer.howToPlayRender(width, height, &gameState);

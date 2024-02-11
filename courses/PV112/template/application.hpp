@@ -13,8 +13,6 @@
 #include "renderHelpers/renderHelper.hpp"
 #include "sphere.hpp"
 #include "teapot.hpp"
-// #include "gameHelpers/gameState.hpp"
-// #include "helper/characterHelper.cpp"
 
 // ----------------------------------------------------------------------------
 // UNIFORM STRUCTS
@@ -141,9 +139,44 @@ class Application : public PV112Application
     // Game Helper classes and variables
     gameState gameState = gameState::gameState();
 
-    int deadTreeCount = 0;
+    // user char
+    glm::vec3 userCharPos;
+    glm::mat4 charRotation;
+    glm::mat4 charScale;
+    ObjectUBO userCharM;
+    std::vector<glm::vec3> userAnimatePos = {
+        glm::vec3(-1.f, -0.1f, 7.5f),
+        glm::vec3(-0.6f, -0.1f, 7.f),
+        glm::vec3(-0.2f, -0.1f, 6.5f),
+        glm::vec3(0.2f, -0.1f, 6.f),
+        glm::vec3(0.6f, -0.1f, 5.5f),
+        glm::vec3(1.f, -0.1f, 5.f)};
 
-    // characterHelper charHelper = characterHelper::characterHelper();
+    // enemy char
+    glm::vec3 enemyCharPos;
+    glm::mat4 enemyCharRotation;
+    glm::mat4 enemyCharScale;
+    ObjectUBO enemyCharM;
+    std::vector<glm::vec3> enemyAnimatePos = {
+        glm::vec3(3.f, -0.1f, 2.5f),
+        glm::vec3(2.6f, -0.1f, 3.0f),
+        glm::vec3(2.2f, -0.1f, 3.5f),
+        glm::vec3(1.8f, -0.1f, 4.f),
+        glm::vec3(1.4f, -0.1f, 4.5f),
+        glm::vec3(1.f, -0.1f, 5.f)};
+
+    //
+    glm::vec3 dirToEnemy;
+    glm::vec3 dirToUser;
+    glm::vec3 currentPosition;
+    bool isAnimating = false;
+    bool shouldAnimate = false;
+    bool enemyAnimate = false;
+    bool backwards = false;
+    float animateTimeout = 100.f;
+    float deltaMerge = 0.f;
+    int posIndex = 0;
+    int maxIndex = 5;
 
     // Renderer helper class
     Renderer renderer;

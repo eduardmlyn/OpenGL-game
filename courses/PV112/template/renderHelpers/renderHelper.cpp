@@ -5,6 +5,11 @@ ImVec4 Renderer::mapRGBAToVectorColor(int red, int green, int blue, float alpha)
     return ImVec4(red / 255.f, green / 255.f, blue / 255.f, alpha);
 }
 
+Renderer::Renderer(std::filesystem::path lecture_folder_path)
+{
+    this->lecture_folder_path = lecture_folder_path;
+    charActionHelper = CharacterAction::CharacterAction(lecture_folder_path);
+}
 Renderer::Renderer()
 {
 }
@@ -52,12 +57,44 @@ void Renderer::howToPlayRender(int width, int height, gameState *state)
     ImGui::End();
 }
 
-void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gearTexture)
+void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gearTexture, bool inAnimation, bool *animateBody, bool *enemyAnimate)
 {
+    if (charActionHelper.isCharDead(true))
+    {
+        ImGuiStyle *style = &ImGui::GetStyle();
+        ImGui::StyleColorsDark(style);
+        colorS silver = cHelper.getColor(SILVER);
+        colorS lightSilver = cHelper.getColor(LIGHT_SILVER);
+        colorS lightBlack = cHelper.getColor(LIGHT_BLACK);
+        ImGui::Begin("End Screen Loss", nullptr, playMenuFlags);
+        ImGui::SetWindowSize(ImVec2(width - 40.f, height - 40.f));
+        ImGui::SetWindowPos(ImVec2(20.f, 20.f));
+        ImVec2 textSize = ImGui::CalcTextSize("You lost!");
+        ImGui::SetCursorPos(ImVec2(20.f + width / 2.f - textSize.x, 20.f + height / 2.f - textSize.y));
+        ImGui::Text("You lost!");
+        ImGui::End();
+        return;
+    }
+    if (charActionHelper.isCharDead(false))
+    {
+        ImGuiStyle *style = &ImGui::GetStyle();
+        ImGui::StyleColorsDark(style);
+        colorS silver = cHelper.getColor(SILVER);
+        colorS lightSilver = cHelper.getColor(LIGHT_SILVER);
+        colorS lightBlack = cHelper.getColor(LIGHT_BLACK);
+        ImGui::Begin("End Screen Loss", nullptr, playMenuFlags);
+        ImGui::SetWindowSize(ImVec2(width - 40.f, height - 40.f));
+        ImGui::SetWindowPos(ImVec2(20.f, 20.f));
+        ImVec2 textSize = ImGui::CalcTextSize("You won!");
+        ImGui::SetCursorPos(ImVec2(20.f + width / 2 - textSize.x, 20.f + height / 2 - textSize.y));
+        ImGui::Text("You won!");
+        ImGui::End();
+        return;
+    }
+
     ImGuiStyle *style = &ImGui::GetStyle();
     ImGui::StyleColorsDark(style);
     colorS silver = cHelper.getColor(LIGHT_SILVER);
-    // colorS lightBlack = cHelper.getColor(LIGHT_BLACK);
     style->Colors[ImGuiCol_Button] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.3f);
     style->Colors[ImGuiCol_ButtonHovered] = mapRGBAToVectorColor(silver.red, silver.green, silver.blue, 0.5f);
     ImGui::Begin("Toggle Menu", nullptr, toggleMenuFlags);
@@ -66,31 +103,102 @@ void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gear
         state->PlayMenu();
     }
     ImGui::End();
+    if (inAnimation)
+    {
+        return;
+    }
 
-    float widthFraction = width / 3.f;
+    float widthFraction = width / 2.f;
     float heightFraction = height / 5.f;
     float padding = 10.f;
     float windowWidth = widthFraction - 2 * padding;
     float windowHeight = heightFraction - 2 * padding;
+    style->WindowRounding = 5.f;
+    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.f, 0.f, 0.f, 1.f);
 
     // -------------------------------
     // User Character Interface
     // -------------------------------
-    ImGui::Begin("User character");
+    ImGui::Begin("User character", nullptr, characterDataFlags);
     ImGui::SetWindowSize(ImVec2(windowWidth, windowHeight));
-    ImGui::SetWindowPos(ImVec2(widthFraction * 2 + padding, heightFraction * 4 + padding));
-
-    if (ImGui::Button("Basic attack", ImVec2(windowWidth / 3 - padding * 2, windowHeight / 2 - padding * 2)))
+    ImGui::SetWindowPos(ImVec2(widthFraction + padding, heightFraction * 4 + padding));
+    float buttonHeight = windowHeight / 2 - padding * 2;
+    float buttonWidth = windowWidth / 3 - padding * 2;
+    ImGui::SetCursorPos(ImVec2(padding * 2, windowHeight / 2 + padding));
+    if (ImGui::Button("Basic attack", ImVec2(buttonWidth, buttonHeight)))
     {
-        /* code */
+        charActionHelper.performBasicAttack(true);
+        *animateBody = true;
+    }
+    ImGui::SetCursorPos(ImVec2(padding * 3 + buttonWidth, windowHeight / 2 + padding));
+    int attackCD = charActionHelper.getSpecialAttackCD(true);
+    std::string attackCDString = std::to_string(attackCD);
+    if (ImGui::Button(attackCD == 0 ? "Special attack" : attackCDString.c_str(), ImVec2(buttonWidth, buttonHeight)))
+    {
+        if (attackCD == 0)
+        {
+            charActionHelper.performSpecialAttack(true);
+            *animateBody = true;
+        }
+    }
+    ImGui::SetCursorPos(ImVec2(padding * 4 + buttonWidth * 2, windowHeight / 2 + padding));
+    int defenseCD = charActionHelper.getSpecialDefenseCD(true);
+    std::string defenseCDString = std::to_string(defenseCD);
+    if (ImGui::Button(defenseCD == 0 ? "Defense" : defenseCDString.c_str(), ImVec2(buttonWidth, buttonHeight)))
+    {
+        charActionHelper.performSpecialDefense(true);
+        *enemyAnimate = true;
     }
 
-    // ImGui::GetCursorScreenPos();
-    float hght = ImGui::GetWindowHeight();
-    ImVec2 size = ImGui::GetWindowPos();
-    float wdth = ImGui::GetWindowWidth();
-    std::cout << "Height x Width: " << hght << " x " << wdth << " and Position: " << size.x << ", " << size.y << std::endl;
+    ImGui::SetCursorPos(ImVec2(padding * 2, windowHeight / 2 - padding * 2));
+    std::stringstream healthStream;
+    healthStream << std::fixed << std::setprecision(2) << charActionHelper.getCharHealth(true);
+    std::string healthText = "Health: " + healthStream.str();
+    ImGui::Text(healthText.c_str());
 
+    ImGui::SetCursorPos(ImVec2(windowWidth / 2 + padding * 2, windowHeight / 2 - padding * 2));
+    std::stringstream armorStream;
+    armorStream << std::fixed << std::setprecision(2) << charActionHelper.getCharArmor(true);
+    std::string armorText = "Armor: " + armorStream.str();
+    ImGui::Text(armorText.c_str());
+    ImGui::End();
+
+    // -------------------------------
+    // Enemy Character Interface
+    // -------------------------------
+    ImGui::Begin("Enemy character", nullptr, characterDataFlags);
+    ImGui::SetWindowSize(ImVec2(windowWidth, windowHeight));
+    ImGui::SetWindowPos(ImVec2(widthFraction + padding, heightFraction * 0 + padding));
+    ImGui::BeginDisabled();
+    ImGui::SetCursorPos(ImVec2(padding * 2, windowHeight / 2 + padding));
+    if (ImGui::Button("Basic attack", ImVec2(buttonWidth, buttonHeight)))
+    {
+    }
+    ImGui::SetCursorPos(ImVec2(padding * 3 + buttonWidth, windowHeight / 2 + padding));
+    attackCD = charActionHelper.getSpecialAttackCD(false);
+    attackCDString = std::to_string(attackCD);
+    if (ImGui::Button(attackCD == 0 ? "Special attack" : attackCDString.c_str(), ImVec2(buttonWidth, buttonHeight)))
+    {
+    }
+    defenseCD = charActionHelper.getSpecialDefenseCD(false);
+    defenseCDString = std::to_string(defenseCD);
+    ImGui::SetCursorPos(ImVec2(padding * 4 + buttonWidth * 2, windowHeight / 2 + padding));
+    if (ImGui::Button(defenseCD == 0 ? "Defense" : defenseCDString.c_str(), ImVec2(buttonWidth, buttonHeight)))
+    {
+    }
+    ImGui::EndDisabled();
+
+    ImGui::SetCursorPos(ImVec2(padding * 2, windowHeight / 2 - padding * 2));
+    std::stringstream enemyHealthStream;
+    enemyHealthStream << std::fixed << std::setprecision(2) << charActionHelper.getCharHealth(false);
+    healthText = "Health: " + enemyHealthStream.str();
+    ImGui::Text(healthText.c_str());
+
+    ImGui::SetCursorPos(ImVec2(windowWidth / 2 + padding * 2, windowHeight / 2 - padding * 2));
+    std::stringstream enemyArmorStream;
+    enemyArmorStream << std::fixed << std::setprecision(2) << charActionHelper.getCharArmor(false);
+    armorText = "Armor: " + enemyArmorStream.str();
+    ImGui::Text(armorText.c_str());
     ImGui::End();
 }
 
@@ -188,4 +296,20 @@ void Renderer::menuRender(int width, int height, gameState *state)
 
 void Renderer::localPvPRender(GLuint program)
 {
+}
+
+bool Renderer::aiMove()
+{
+    if (charActionHelper.getSpecialAttackCD(false) == 0)
+    {
+        charActionHelper.performSpecialAttack(false);
+        return true;
+    }
+    if (charActionHelper.getSpecialDefenseCD(false) == 0)
+    {
+        charActionHelper.performSpecialDefense(false);
+        return false;
+    }
+    charActionHelper.performBasicAttack(false);
+    return true;
 }

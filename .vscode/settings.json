@@ -83,7 +83,15 @@
     "xmemory": "cpp",
     "xtr1common": "cpp",
     "xtree": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "bitset": "cpp",
+    "cinttypes": "cpp",
+    "complex": "cpp",
+    "coroutine": "cpp",
+    "csignal": "cpp",
+    "deque": "cpp",
+    "future": "cpp",
+    "unordered_set": "cpp"
   },
   "C_Cpp.dimInactiveRegions": false
 }
