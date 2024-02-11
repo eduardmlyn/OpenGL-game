@@ -5,10 +5,9 @@ ImVec4 Renderer::mapRGBAToVectorColor(int red, int green, int blue, float alpha)
     return ImVec4(red / 255.f, green / 255.f, blue / 255.f, alpha);
 }
 
-Renderer::Renderer(std::filesystem::path lecture_folder_path)
+Renderer::Renderer(ALuint soundSource)
 {
-    this->lecture_folder_path = lecture_folder_path;
-    charActionHelper = CharacterAction::CharacterAction(lecture_folder_path);
+    charActionHelper = CharacterAction::CharacterAction(soundSource);
 }
 Renderer::Renderer()
 {

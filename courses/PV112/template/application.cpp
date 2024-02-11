@@ -40,7 +40,8 @@ GLuint load_texture_2d(const std::filesystem::path filename)
 Application::Application(int initial_width, int initial_height, std::vector<std::string> arguments)
     : PV112Application(initial_width, initial_height, arguments)
 {
-    renderer = Renderer::Renderer(lecture_folder_path);
+    initSound();
+    renderer = Renderer::Renderer(soundData.source);
     this->width = initial_width;
     this->height = initial_height;
 
@@ -230,6 +231,8 @@ Application::~Application()
     glDeleteBuffers(1, &objects_buffer);
     glDeleteBuffers(1, &lights_buffer);
     glDeleteBuffers(1, &fog_buffer);
+
+    freeSound();
 }
 
 // ----------------------------------------------------------------------------
@@ -466,4 +469,71 @@ void Application::on_key_pressed(int key, int scancode, int action, int mods)
 {
     // Calls default implementation that invokes compile_shaders when 'R key is hit.
     PV112Application::on_key_pressed(key, scancode, action, mods);
+}
+
+int testOpenAlError(const char *_msg)
+{
+    ALCenum error = alGetError();
+    if (error != AL_NO_ERROR)
+    {
+        fprintf(stderr, _msg, "\n");
+        return -1;
+    }
+    return 0;
+}
+
+void Application::initSound()
+{
+    std::cout << alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER) << std::endl;
+    soundData.device = alcOpenDevice(nullptr);
+    if (soundData.device)
+    {
+        soundData.context = alcCreateContext(soundData.device, NULL);
+        alcMakeContextCurrent(soundData.context);
+    }
+    alutInit(NULL, NULL);
+
+    alGenSources(1, &soundData.source);
+    // check for errors
+    testOpenAlError("source generation");
+
+    alSourcef(soundData.source, AL_PITCH, 1);
+    // check for errors
+    testOpenAlError("source PITCH");
+    alSourcef(soundData.source, AL_GAIN, 1);
+    // check for errors
+    testOpenAlError("source GAIN");
+    alSource3f(soundData.source, AL_POSITION, 0, 0, 0);
+    // check for errors
+    testOpenAlError("source POSITION");
+    alSource3f(soundData.source, AL_VELOCITY, 0, 0, 0);
+    // check for errors
+    testOpenAlError("source VELOCITY");
+    alSourcei(soundData.source, AL_LOOPING, AL_FALSE);
+    testOpenAlError("source LOOPING");
+
+    alGenBuffers(1, &soundData.buffer);
+    testOpenAlError("buffer generation");
+
+    std::filesystem::path sound_path = lecture_folder_path / "sounds" / "punch.wav";
+    // std::cout << sound_path << std::endl;
+    ALfloat freq2;
+    soundData.data = alutLoadMemoryFromFile(sound_path.string().c_str(), &soundData.format, &soundData.size, &freq2);
+    soundData.freq = (ALsizei)freq2;
+    alBufferData(soundData.buffer, soundData.format, soundData.data, soundData.size, soundData.freq);
+    testOpenAlError("buffer copy");
+
+    alSourcei(soundData.source, AL_BUFFER, soundData.buffer);
+    testOpenAlError("buffer binding");
+}
+
+void Application::freeSound()
+{
+    alDeleteSources(1, &soundData.source);
+    alDeleteBuffers(1, &soundData.buffer);
+    alutExit();
+    ALCdevice *device = alcGetContextsDevice(soundData.context);
+    alcMakeContextCurrent(NULL);
+    alcDestroyContext(soundData.context);
+    alcCloseDevice(device);
 }

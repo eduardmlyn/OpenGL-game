@@ -1,11 +1,10 @@
 #include "characterHelper.hpp"
 
-CharacterAction::CharacterAction(std::filesystem::path lecture_folder_path)
+CharacterAction::CharacterAction(ALuint soundSource)
 {
     userChar = {100.f, 30.f, 0, 0};
     enemyChar = {100.f, 30.f, 0, 0};
-    this->lecture_folder_path = lecture_folder_path;
-    initSound();
+    this->soundSource = soundSource;
 }
 
 CharacterAction::CharacterAction()
@@ -14,7 +13,6 @@ CharacterAction::CharacterAction()
 
 CharacterAction::~CharacterAction()
 {
-    freeSound();
 }
 
 void CharacterAction::dealDamageIsKill(bool isUser, float damage)
@@ -51,7 +49,7 @@ void CharacterAction::dealDamageIsKill(bool isUser, float damage)
     {
         character->health -= damage;
     }
-    alSourcePlay(soundData.source);
+    alSourcePlay(soundSource);
 }
 
 void CharacterAction::performBasicAttack(bool isUser)
@@ -141,70 +139,4 @@ int CharacterAction::getSpecialAttackCD(bool isUser)
 int CharacterAction::getSpecialDefenseCD(bool isUser)
 {
     return isUser ? userChar.specialDefenseCD : enemyChar.specialDefenseCD;
-}
-
-int testOpenAlError(const char *_msg)
-{
-    ALCenum error = alGetError();
-    if (error != AL_NO_ERROR)
-    {
-        fprintf(stderr, _msg, "\n");
-        return -1;
-    }
-    return 0;
-}
-
-void CharacterAction::initSound()
-{
-    soundData.device = alcOpenDevice(nullptr);
-    if (soundData.device)
-    {
-        soundData.context = alcCreateContext(soundData.device, NULL);
-        alcMakeContextCurrent(soundData.context);
-    }
-    alutInit(NULL, NULL);
-
-    alGenSources(1, &soundData.source);
-    // check for errors
-    testOpenAlError("source generation");
-
-    alSourcef(soundData.source, AL_PITCH, 1);
-    // check for errors
-    testOpenAlError("source PITCH");
-    alSourcef(soundData.source, AL_GAIN, 1);
-    // check for errors
-    testOpenAlError("source GAIN");
-    alSource3f(soundData.source, AL_POSITION, 0, 0, 0);
-    // check for errors
-    testOpenAlError("source POSITION");
-    alSource3f(soundData.source, AL_VELOCITY, 0, 0, 0);
-    // check for errors
-    testOpenAlError("source VELOCITY");
-    alSourcei(soundData.source, AL_LOOPING, AL_FALSE);
-    testOpenAlError("source LOOPING");
-
-    alGenBuffers(1, &soundData.buffer);
-    testOpenAlError("buffer generation");
-
-    std::filesystem::path sound_path = lecture_folder_path / "sounds" / "punch.wav";
-    // std::cout << sound_path << std::endl;
-    ALfloat freq2;
-    soundData.data = alutLoadMemoryFromFile(sound_path.string().c_str(), &soundData.format, &soundData.size, &freq2);
-    soundData.freq = (ALsizei)freq2;
-    alBufferData(soundData.buffer, soundData.format, soundData.data, soundData.size, soundData.freq);
-    testOpenAlError("buffer copy");
-
-    alSourcei(soundData.source, AL_BUFFER, soundData.buffer);
-    testOpenAlError("buffer binding");
-}
-
-void CharacterAction::freeSound()
-{
-    alDeleteSources(1, &soundData.source);
-    alDeleteBuffers(1, &soundData.buffer);
-    alutExit();
-    ALCdevice *device = alcGetContextsDevice(soundData.context);
-    alcMakeContextCurrent(NULL);
-    alcDestroyContext(soundData.context);
-    alcCloseDevice(device);
 }

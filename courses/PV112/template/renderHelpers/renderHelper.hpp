@@ -21,7 +21,6 @@ private:
     ImGuiStyle windowStyle;
     ImVec4 mapRGBAToVectorColor(int red, int green, int blue, float alpha);
     colors cHelper = colors::colors();
-    std::filesystem::path lecture_folder_path;
     CharacterAction charActionHelper;
     const char *gameName = "HERO OF DERILIA";
     const char *howToPlayS = "How to play:";
@@ -36,7 +35,7 @@ private:
                                 "The critical damage deals 20%% more damage.";
 
 public:
-    Renderer(std::filesystem::path lecture_folder_path);
+    Renderer(ALuint soundSource);
     Renderer();
     ~Renderer();
     void howToPlayRender(int width, int height, gameState *state);

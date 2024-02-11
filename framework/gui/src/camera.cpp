@@ -82,29 +82,29 @@ void Camera::on_mouse_move(double x, double y)
 void Camera::on_mouse_button(int button, int action, int mods)
 {
     // Left mouse button affects the angles.
-    if (button == GLFW_MOUSE_BUTTON_LEFT)
-    {
-        if (action == GLFW_PRESS)
-        {
-            is_rotating = true;
-        }
-        else
-        {
-            is_rotating = false;
-        }
-    }
+    // if (button == GLFW_MOUSE_BUTTON_LEFT)
+    // {
+    //     if (action == GLFW_PRESS)
+    //     {
+    //         is_rotating = true;
+    //     }
+    //     else
+    //     {
+    //         is_rotating = false;
+    //     }
+    // }
     // Right mouse button affects the zoom.
-    if (button == GLFW_MOUSE_BUTTON_RIGHT)
-    {
-        if (action == GLFW_PRESS)
-        {
-            is_zooming = true;
-        }
-        else
-        {
-            is_zooming = false;
-        }
-    }
+    // if (button == GLFW_MOUSE_BUTTON_RIGHT)
+    // {
+    //     if (action == GLFW_PRESS)
+    //     {
+    //         is_zooming = true;
+    //     }
+    //     else
+    //     {
+    //         is_zooming = false;
+    //     }
+    // }
 }
 
 // ----------------------------------------------------------------------------

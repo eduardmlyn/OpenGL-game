@@ -180,6 +180,11 @@ class Application : public PV112Application
 
     // Renderer helper class
     Renderer renderer;
+    SoundData soundData;
+
+private:
+    void initSound();
+    void freeSound();
 
     // ----------------------------------------------------------------------------
     // Constructors & Destructors
