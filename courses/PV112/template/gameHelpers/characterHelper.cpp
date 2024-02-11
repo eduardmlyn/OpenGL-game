@@ -52,7 +52,6 @@ void CharacterAction::dealDamageIsKill(bool isUser, float damage)
         character->health -= damage;
     }
     alSourcePlay(soundData.source);
-    std::cout << "played sound" << std::endl;
 }
 
 void CharacterAction::performBasicAttack(bool isUser)
@@ -149,7 +148,6 @@ int testOpenAlError(const char *_msg)
     ALCenum error = alGetError();
     if (error != AL_NO_ERROR)
     {
-
         fprintf(stderr, _msg, "\n");
         return -1;
     }
@@ -188,14 +186,13 @@ void CharacterAction::initSound()
     alGenBuffers(1, &soundData.buffer);
     testOpenAlError("buffer generation");
 
-    std::filesystem::path sound_path = lecture_folder_path / "sounds" / "Bomb.wav";
+    std::filesystem::path sound_path = lecture_folder_path / "sounds" / "punch.wav";
     // std::cout << sound_path << std::endl;
     ALfloat freq2;
     soundData.data = alutLoadMemoryFromFile(sound_path.string().c_str(), &soundData.format, &soundData.size, &freq2);
     soundData.freq = (ALsizei)freq2;
     alBufferData(soundData.buffer, soundData.format, soundData.data, soundData.size, soundData.freq);
     testOpenAlError("buffer copy");
-    std::cout << "test line" << std::endl;
 
     alSourcei(soundData.source, AL_BUFFER, soundData.buffer);
     testOpenAlError("buffer binding");

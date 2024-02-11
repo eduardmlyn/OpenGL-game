@@ -417,7 +417,6 @@ void Application::render_ui()
         this->~Application();
         break;
     case PLAY_VS_AI:
-        // TODO add other textures for icon health and other stuff?
         renderer.aiPlayRender(width, height, &gameState, gear_texture, isAnimating, &shouldAnimate, &shouldEnemy);
         if (shouldAnimate)
         {

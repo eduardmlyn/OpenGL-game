@@ -325,8 +325,8 @@ Geometry Geometry::from_file(std::filesystem::path path)
         }
         if (hasTexture)
         {
-            std::cout << colors.at(0) << ", " << colors.at(1) << ", " << colors.at(2) << ", "
-                      << "channels: " << channels << std::endl;
+            // std::cout << colors.at(0) << ", " << colors.at(1) << ", " << colors.at(2) << ", "
+            //   << "channels: " << channels << std::endl;
             stbi_image_free(data);
         }
         glm::vec3 diff = max - min;

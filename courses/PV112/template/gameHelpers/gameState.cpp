@@ -29,11 +29,11 @@ void gameState::PlayVsAI()
     currentState = PLAY_VS_AI;
 }
 
-void gameState::PlayLocalPVP()
-{
-    previousStates.push_back(currentState);
-    currentState = PLAY_LOCAL_PVP;
-}
+// void gameState::PlayLocalPVP()
+// {
+// previousStates.push_back(currentState);
+// currentState = PLAY_LOCAL_PVP;
+// }
 
 void gameState::HowToPlay()
 {

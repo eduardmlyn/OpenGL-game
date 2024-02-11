@@ -276,11 +276,11 @@ void Renderer::menuRender(int width, int height, gameState *state)
     {
         state->PlayVsAI();
     }
-    ImGui::SetCursorPos(ImVec2((window_width - 270) * 0.5f, (height - 200.f) / 5 * 3));
-    if (ImGui::Button("2 Player mode locally", ImVec2(270, 50)))
-    {
-        state->PlayLocalPVP();
-    }
+    // ImGui::SetCursorPos(ImVec2((window_width - 270) * 0.5f, (height - 200.f) / 5 * 3));
+    // if (ImGui::Button("2 Player mode locally", ImVec2(270, 50)))
+    // {
+    // state->PlayLocalPVP();
+    // }
     ImGui::SetCursorPos(ImVec2((window_width - 270) * 0.5f, (height - 200.f) / 5 * 4));
     if (ImGui::Button("How to Play", ImVec2(270, 50)))
     {
