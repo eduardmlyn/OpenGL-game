@@ -1,11 +1,12 @@
 #include <list>
+#include <iostream>
 
 enum gameStateE
 {
     GAME_EXIT,
     GAME_MENU,
     PLAY_VS_AI,
-    PLAY_LOCAL_PVP,
+    // PLAY_LOCAL_PVP,
     HOW_TO_PLAY,
     PLAY_MENU
 };
@@ -44,7 +45,7 @@ public:
     /**
      * Changes the state to PLAY_LOCAL_PVP.
      */
-    void PlayLocalPVP();
+    // void PlayLocalPVP();
     /**
      * Changes the state to HOW_TO_PLAY.
      */
@@ -53,4 +54,6 @@ public:
      * Changes the state to PLAY_MENU.
      */
     void PlayMenu();
+
+    void PrintStateList();
 };

@@ -123,6 +123,8 @@ void Geometry::init_vao() {
         glEnableVertexArrayAttrib(vao, color_loc);
         glVertexArrayAttribFormat(vao, color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * offset);
         glVertexArrayAttribBinding(vao, color_loc, 0);
+        color_offset = offset;
+        offset += 3;
         // todo solve offset for color
     }
     if (tex_coord_loc >= 0) {

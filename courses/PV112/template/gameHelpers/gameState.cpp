@@ -2,11 +2,13 @@
 
 void gameState::Back()
 {
-    previousStates.pop_back();
     if (previousStates.empty())
     {
         this->Exit();
+        return;
     }
+    currentState = previousStates.back();
+    previousStates.pop_back();
 };
 
 void gameState::Exit()
@@ -27,11 +29,11 @@ void gameState::PlayVsAI()
     currentState = PLAY_VS_AI;
 }
 
-void gameState::PlayLocalPVP()
-{
-    previousStates.push_back(currentState);
-    currentState = PLAY_LOCAL_PVP;
-}
+// void gameState::PlayLocalPVP()
+// {
+// previousStates.push_back(currentState);
+// currentState = PLAY_LOCAL_PVP;
+// }
 
 void gameState::HowToPlay()
 {
@@ -43,4 +45,12 @@ void gameState::PlayMenu()
 {
     previousStates.push_back(currentState);
     currentState = PLAY_MENU;
+}
+
+void gameState::PrintStateList()
+{
+    for (const auto &element : previousStates)
+    {
+        std::cout << element << ", ";
+    }
 }
