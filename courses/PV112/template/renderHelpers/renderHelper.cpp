@@ -145,8 +145,11 @@ void Renderer::aiPlayRender(int width, int height, gameState *state, GLuint gear
     std::string defenseCDString = std::to_string(defenseCD);
     if (ImGui::Button(defenseCD == 0 ? "Defense" : defenseCDString.c_str(), ImVec2(buttonWidth, buttonHeight)))
     {
-        charActionHelper.performSpecialDefense(true);
-        *enemyAnimate = true;
+        if (defenseCD == 0)
+        {
+            charActionHelper.performSpecialDefense(true);
+            *enemyAnimate = true;
+        }
     }
 
     ImGui::SetCursorPos(ImVec2(padding * 2, windowHeight / 2 - padding * 2));
